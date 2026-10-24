@@ -1,0 +1,838 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PEJADIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root{--navy:#20386f;--navy-deep:#182d5b;--yellow:#ffb914;--bg:#f5f7fb;--surface:#fff;--text:#243047;--muted:#64748b;--border:#e0e5ef;--danger:#b42318;--success:#15803d;--shadow:0 18px 50px rgba(24,45,91,.10);--radius:14px}
+*{box-sizing:border-box}body{margin:0;font:14px Inter,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}
+h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;margin:0;color:var(--navy)}h2{font-size:22px}h3{font-size:17px}.ms{font-family:'Material Symbols Outlined';font-size:20px;line-height:1;vertical-align:middle}
+#root{min-height:100vh}#app{min-height:100vh;display:flex;flex-direction:column}.app-layout{display:flex;flex:1;min-height:calc(100vh - 68px)}
+aside{display:flex;flex-direction:column;flex:0 0 264px;width:264px;background:var(--navy-deep);color:#f8faff;padding:16px 14px;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto;z-index:20}
+aside nav{flex:1}
+#app.nav-collapsed aside{display:none}
+.brand{display:flex;align-items:center;gap:12px;min-height:94px;padding:16px 8px 18px;border-bottom:1px solid rgba(255,255,255,.14);margin-bottom:16px}
+.brand-copy{min-width:0}.brand-copy strong{display:block;font:700 15px 'Plus Jakarta Sans';letter-spacing:.03em}.brand-copy span{display:block;color:#d9e2f5;font-size:11px;line-height:1.45;margin-top:3px}
+aside small{display:block;padding:14px 12px 6px;color:#bdc9df;font-size:10px;font-weight:700;letter-spacing:.1em}
+aside a{display:flex;gap:11px;align-items:center;min-height:42px;margin:2px 0;padding:9px 12px;border-radius:9px;border-left:3px solid transparent;color:#e3eaf7;text-decoration:none;cursor:pointer;transition:background .15s,color .15s}
+aside a:hover{background:rgba(255,255,255,.09);color:#fff}aside a.on{background:rgba(255,185,20,.13);border-left-color:var(--yellow);color:#fff;font-weight:600}aside a.on .ms{color:var(--yellow)}
+.nav-group-toggle{display:flex;width:100%;align-items:center;gap:11px;min-height:42px;padding:9px 12px;border:0;border-radius:9px;background:transparent;color:#e3eaf7;font-size:13px;font-weight:600;text-align:left}
+.nav-group-toggle:hover{background:rgba(255,255,255,.09);transform:none}
+.nav-group-toggle.is-active{background:rgba(255,185,20,.13);border-left:3px solid var(--yellow);padding-left:9px;color:#fff}
+.nav-group-toggle.is-active .ms{color:var(--yellow)}
+.nav-children{margin:0 0 4px 20px;padding-left:9px;border-left:1px solid rgba(255,255,255,.2)}
+.nav-children a{min-height:36px;padding:8px 10px;font-size:12px}
+.nav-children a.on{background:rgba(255,185,20,.13);border-left-color:var(--yellow);color:#fff;font-weight:600}
+.sidebar-logout{display:flex;width:100%;align-items:center;gap:10px;margin-top:auto;padding:13px 12px;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:rgba(255,255,255,.06);color:#e3eaf7;text-align:left}
+.sidebar-logout:hover{background:rgba(255,255,255,.13);color:#fff;transform:none}
+.sidebar-logout .ms{font-size:19px}
+.sidebar-collapse-button{display:flex;width:30px;height:30px;align-items:center;justify-content:center;margin:0 0 6px auto;padding:0;border:1px solid transparent;border-radius:8px;background:transparent;color:#bdc9df;cursor:pointer}
+.sidebar-collapse-button:hover{background:rgba(255,255,255,.09);color:#fff;transform:none}
+.sidebar-collapse-button:focus-visible{outline:2px solid rgba(255,255,255,.55);outline-offset:2px}
+.sidebar-collapse-button .ms{font-size:20px}
+main{flex:1;padding:30px 34px;min-width:0}.bar{display:flex;gap:12px;align-items:center;margin-bottom:18px;flex-wrap:wrap}.bar h2{flex:1}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:0 3px 12px rgba(36,48,71,.035);overflow:auto}
+table{width:100%;border-collapse:collapse}th{text-align:left;background:#f1f4f9;font-size:11px;text-transform:uppercase;letter-spacing:.045em;color:#475569}th,td{padding:11px 12px;border-bottom:1px solid var(--border);white-space:nowrap}td{color:var(--text)}tr:last-child td{border-bottom:0}tr.warn{background:#fff7e5}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(32,56,111,.12)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(32,56,111,.2);outline-offset:1px}
+label{display:block;font-size:12px;font-weight:600;color:#475569}.required-mark{color:#b42318;font-weight:700}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:14px}
+.money-control{display:flex;align-items:stretch;margin-top:7px;border-radius:8px}.money-prefix{display:flex;align-items:center;padding:0 12px;border:1px solid #cbd5e1;border-right:0;border-radius:8px 0 0 8px;background:#f1f4f9;color:#475569;font-weight:600}.money-control input{min-width:0;border-radius:0 8px 8px 0;margin:0!important}.money-control:focus-within{border-radius:8px;box-shadow:0 0 0 3px rgba(32,56,111,.12)}.money-control:focus-within .money-prefix,.money-control:focus-within input{border-color:var(--navy);box-shadow:none}
+.auto-field{color:#315b91}
+.auto-field input{background:#eaf2ff;border-color:#b8cbea;color:#294c78}
+#f.st-form .auto-field input[readonly]{background:#eaf2ff;border-color:#b8cbea;color:#294c78}
+.auto-field small{color:#52739e}
+.form-legend{margin:0 0 14px;color:var(--muted);font-size:11px}
+.form-legend-auto{display:inline-flex;align-items:center;gap:6px}
+.form-legend-auto::before{width:12px;height:12px;border:1px solid #b8cbea;border-radius:3px;background:#eaf2ff;content:""}
+.st-summary{border-color:#cbd8ec;background:#fff}
+.st-purpose{padding:16px 18px;margin:-20px -20px 16px;border-radius:13px 13px 0 0;border-bottom:1px solid #cbd8ec;background:linear-gradient(115deg,#20386f,#2b4b89 68%,#35558f);color:#fff}
+.st-purpose .st-summary-kicker{color:#dbe7ff}.st-purpose h3{margin-top:5px;color:#fff;font-size:19px;overflow-wrap:anywhere}
+.st-summary-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.st-fact-purpose{grid-column:1/-1}
+.st-fact{min-width:0;padding:15px;border:1px solid #d5deec;border-radius:11px;background:#f3f6fb}
+.st-fact:hover{border-color:#b9c5db;box-shadow:0 5px 14px rgba(32,56,111,.06)}
+.st-fact-label{display:block;margin-bottom:11px;color:var(--navy);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.st-subfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px}
+.st-schedule-subfacts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.st-route-subfacts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.st-route-subfacts .st-subfact:last-child{grid-column:1/-1}
+.st-subfact{min-width:0;padding:10px 11px;border:1px solid #dbe3ef;border-radius:8px;background:#fff}
+.st-subfact-duration{grid-column:1/-1}
+.st-subfact-label{display:block;margin-bottom:5px;color:var(--muted);font-size:11px;font-weight:500}
+.st-subfact strong{display:block;line-height:1.45;overflow-wrap:anywhere;font-size:14px}
+.st-subfact small{display:block;margin-top:4px;color:var(--muted)}
+.st-form .g{grid-template-columns:minmax(0,1fr);align-items:start;gap:14px}
+#f:not(.st-form) .g{grid-template-columns:minmax(0,1fr)}
+#sp>button[type=submit]{display:block;margin-left:auto}
+.cost-table{width:100%;min-width:720px}
+.cost-table th:first-child,.cost-table td:first-child{min-width:230px}
+.cost-table th:nth-child(2),.cost-table td:nth-child(2),.cost-table th:nth-child(3),.cost-table td:nth-child(3){min-width:70px;text-align:center}
+.cost-table th:nth-child(4),.cost-table td:nth-child(4){min-width:150px}
+.cost-table th:nth-child(5),.cost-table td:nth-child(5){min-width:100px}
+.cost-table th:nth-child(6),.cost-table td:nth-child(6){min-width:90px}
+.cost-table th{white-space:normal;line-height:1.4;vertical-align:bottom;background:#eef2f8;color:#42516b}
+.cost-table thead th{border-bottom:1px solid var(--border)}
+.cost-table-wrap{max-width:100%;overflow:auto}
+.cost-table th:first-child,.cost-table td:first-child{position:sticky;left:0;z-index:1;background:#fff;box-shadow:2px 0 5px rgba(36,48,71,.06)}
+.cost-table thead th:first-child{background:#eef2f8;z-index:2}
+.cost-table tbody tr:nth-child(even){background:#f7f9fc}
+.cost-table tbody tr:nth-child(even) td:first-child{background:#f7f9fc}
+.cost-table tbody tr:hover td:first-child{background:#edf3ff}
+.cost-table td{vertical-align:top}
+.cost-table tbody tr{transition:background .14s ease}
+.cost-table tbody tr:hover{background:#edf3ff}
+.cost-table tbody td:nth-child(4){background:#effaf3}
+.cost-table tbody tr:nth-child(even) td:nth-child(4){background:#e8f6ed}
+.cost-table tfoot th,.cost-table tfoot td{background:#f0f4fa;font-weight:700}
+.cost-table tfoot th:first-child{background:#e5ebf5}
+.cost-count{font-weight:700;color:#475569;font-variant-numeric:tabular-nums}
+.cost-person{display:block;font-weight:700}
+.cost-amount{font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy)}
+.cost-grand-total{font-weight:700;color:#166534;background:#f0fdf4}
+.cost-details-trigger{padding:6px 12px;border:1px solid #ccd8ec;border-radius:999px;background:#f1f5fb;color:var(--navy);font-size:12px;font-weight:600;white-space:nowrap}
+.cost-details-trigger:hover{border-color:#9eb2d2;background:#e6eef9;transform:none}
+.cost-dialog{width:min(480px,calc(100vw - 32px));max-width:none;max-height:min(85vh,720px);padding:0;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24);overflow:auto}
+.cost-dialog::backdrop{background:rgba(17,31,57,.52);backdrop-filter:blur(2px)}
+.cost-details-content{padding:18px;white-space:normal}
+.cost-dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
+.cost-details-content h4{margin:0;color:var(--navy);font:700 16px 'Plus Jakarta Sans',sans-serif;overflow-wrap:anywhere}
+.cost-dialog-close{flex:0 0 auto;width:34px;height:34px;padding:0;border:1px solid var(--border);border-radius:50%;background:#f8fafc;color:var(--navy);font-size:20px;line-height:1}
+.cost-dialog-close:hover{background:#eaf0fa;transform:none}
+.st-confirm-dialog{width:min(480px,calc(100vw - 32px));max-width:none;padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24)}
+.st-confirm-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.st-confirm-dialog h3{margin:0 0 8px;color:var(--navy);font-size:18px}
+.st-confirm-dialog>p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.st-confirm-check{display:flex;align-items:flex-start;gap:10px;margin:18px 0;padding:13px;border:1px solid var(--border);border-radius:9px;background:#f8fafc;color:#334155;font-size:13px;line-height:1.5}
+.st-confirm-check input{width:18px;height:18px;flex:0 0 auto;margin:1px 0 0;accent-color:var(--navy)}
+.st-confirm-actions{display:flex;justify-content:flex-end;gap:9px}
+.st-confirm-actions button{min-width:110px}
+.st-confirm-actions button:disabled{cursor:not-allowed}
+.st-number-dialog{width:min(460px,calc(100vw - 32px));max-width:none;padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24)}
+.st-number-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.st-number-dialog h3{margin:0 0 7px;color:var(--navy);font-size:18px}
+.st-number-dialog>p{margin:0 0 17px;color:var(--muted);font-size:13px;line-height:1.55}
+.st-number-dialog label{display:block;margin-bottom:18px;color:#475569;font-size:12px;font-weight:600}
+.st-number-dialog input{margin-top:7px}
+.st-number-dialog-actions{display:flex;justify-content:flex-end;gap:9px}
+.st-number-dialog-actions button{min-width:110px}
+.cost-details-content dl{display:grid;grid-template-columns:minmax(120px,1fr) auto;gap:7px 14px;margin:0;font-size:12px}
+.cost-details-content dt{color:var(--muted)}.cost-details-content dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.muted{color:var(--muted);font-size:12px}
+.cost-details-note{margin:10px 0 0;padding:8px 10px;border-radius:7px;background:#fff7e5;color:#795600;font-size:11px;line-height:1.5}
+.cost-total-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:16px;padding:14px 16px;border-radius:10px;background:#eef3fa;border:1px solid #dce7f5}
+.cost-total-bar span{color:var(--muted);font-size:12px}.cost-total-bar strong{font-size:19px;color:#166534;font-variant-numeric:tabular-nums}
+.st-form label input,.st-form label select,.st-form label textarea{display:block;margin-top:7px}
+#f.st-form [hidden]{display:none!important}
+#f.st-form textarea{min-height:104px;resize:vertical;line-height:1.55}
+#f.st-form .st-date-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+#f.st-form .st-form-section{padding:16px 0 4px;border-top:1px solid var(--border)}
+#f.st-form .st-form-section:first-of-type{padding-top:0;border-top:0}
+#f.st-form .st-form-section h3{margin-bottom:12px;font-size:15px}
+#f.st-form .st-field-note{margin:6px 0 0;color:var(--muted);font-size:11px;line-height:1.5}
+#f.st-form input[readonly]{background:#f1f4f9;color:#475569}
+.st-form-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+button,.btn{background:var(--yellow);color:#182d5b;border:1px solid var(--yellow);border-radius:8px;padding:10px 15px;font:700 13px Inter,sans-serif;cursor:pointer;text-decoration:none;display:inline-block;transition:filter .15s,transform .15s}button:hover,.btn:hover{filter:brightness(.96);transform:translateY(-1px)}button:focus-visible,.btn:focus-visible,a:focus-visible{outline:3px solid rgba(255,185,20,.55);outline-offset:2px}
+button:disabled{opacity:.62;cursor:wait;transform:none}
+.btn2{background:#fff;color:var(--navy);border-color:#b9c5db}.bd{background:var(--danger);color:#fff;border-color:var(--danger)}
+.table-wrap{max-width:100%;overflow:auto}.table-wrap:focus-visible{outline:3px solid rgba(32,56,111,.25);outline-offset:2px}
+.data-table-wrap{border:1px solid var(--border);border-radius:10px}
+.data-table-wrap thead{position:sticky;top:0;z-index:1}
+.data-table-wrap th{padding:13px 12px;background:#eef2f8;color:#42516b;font-size:10px;letter-spacing:.07em}
+.data-table-wrap td{padding:13px 12px;vertical-align:middle}
+.data-table-wrap tbody tr{transition:background .15s}
+.data-table-wrap tbody tr:hover{background:#f6f8fc}
+.data-table-wrap tbody tr:last-child td{border-bottom:0}
+.dashboard-heading{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-bottom:20px}
+.dashboard-title-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.dashboard-heading h2{margin-top:4px}
+.dashboard-create-button{flex:0 0 auto;white-space:nowrap;text-align:center}
+.dashboard-tools{display:grid;grid-template-columns:minmax(220px,1fr) minmax(145px,170px) minmax(150px,175px) auto;align-items:center;gap:10px;width:100%}
+.dashboard-tools input{width:100%;min-width:0}
+.dashboard-tools select{width:auto;min-width:145px}
+.dashboard-tools #dl{min-width:150px}
+.dashboard-tools .btn{white-space:nowrap;text-align:center}
+.scorecards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:12px}
+.scorecard{display:flex;align-items:center;gap:13px;min-width:0;min-height:96px;padding:15px 17px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--text);text-align:left;box-shadow:0 3px 12px rgba(36,48,71,.035);transition:border-color .15s,box-shadow .15s,transform .15s}
+.scorecard:hover{border-color:#b9c5db;box-shadow:0 6px 18px rgba(32,56,111,.08)}
+.scorecard-static{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:13px;width:100%;min-height:78px;margin-bottom:18px;cursor:default}
+.scorecard-static:hover{transform:none}
+.scorecard-static .scorecard-copy{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:3px 14px}
+.scorecard-static .scorecard-label{grid-column:1;grid-row:1}
+.scorecard-static .scorecard-value{grid-column:2;grid-row:1 / span 2;margin:0;text-align:right}
+.scorecard-static .scorecard-note{grid-column:1;grid-row:2}
+.scorecard[data-status=""]{border-color:#d8e2fa;background:#f4f7ff}
+.scorecard[data-status=""] .scorecard-icon{background:#e3ebff;color:#20386f}
+.scorecard[data-status=DRAFT]{border-color:#dfe3e8;background:#f6f7f9}
+.scorecard[data-status=DRAFT] .scorecard-icon{background:#e7eaee;color:#475569}
+.scorecard[data-status=DIAJUKAN]{border-color:#f1dfac;background:#fffaf0}
+.scorecard[data-status=DIAJUKAN] .scorecard-icon{background:#ffefbd;color:#946200}
+.scorecard[data-status=TERBIT]{border-color:#c9dafa;background:#f1f6ff}
+.scorecard[data-status=TERBIT] .scorecard-icon{background:#dce7ff;color:#20386f}
+.scorecard-cost{border-color:#a7d8bd;background:#f0faf4}
+.scorecard-cost .scorecard-icon{background:#d5f1df;color:#167343}
+.scorecard-cost .scorecard-label,.scorecard-cost .scorecard-value{color:#167343}
+.scorecard[aria-pressed=true]{border-color:var(--navy);box-shadow:0 0 0 2px rgba(32,56,111,.1)}
+.scorecard-icon{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:11px;background:#edf2ff;color:var(--navy)}
+.scorecard[data-status=DRAFT] .scorecard-icon{background:#edf0f5;color:#475569}
+.scorecard[data-status=DIAJUKAN] .scorecard-icon{background:#fff1c2;color:#795600}
+.scorecard[data-status=TERBIT] .scorecard-icon{background:#dce7ff;color:#20386f}
+.scorecard-copy{flex:1;min-width:0}.scorecard-label{display:block;color:var(--muted);font-size:12px;font-weight:600;line-height:1.35;white-space:normal;overflow-wrap:normal}
+.scorecard-value{display:block;margin-top:4px;color:var(--navy);font:700 22px 'Plus Jakarta Sans',sans-serif}
+.scorecard-value[data-count=cost]{font-size:clamp(13px,1vw,15px);line-height:1.35;white-space:nowrap}
+.scorecard-note{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.3;white-space:nowrap}
+.dashboard-table{margin-bottom:0;padding:12px}
+.dashboard-table .table-wrap{border:1px solid var(--border);border-radius:10px}
+.dashboard-table table{min-width:1120px}
+.dashboard-table thead{position:sticky;top:0;z-index:1}
+.dashboard-table th{padding:13px 12px;background:#eef2f8;color:#42516b;font-size:10px;letter-spacing:.07em}
+.dashboard-table td{padding:13px 12px;vertical-align:middle}
+.pdf-table-card{padding:12px}
+.pdf-table-card .table-wrap{border:1px solid var(--border);border-radius:10px}
+.pdf-table-card table{min-width:1120px}
+.pdf-table-card thead{position:sticky;top:0;z-index:1}
+.pdf-table-card th{padding:13px 12px;background:#eef2f8;color:#42516b;font-size:10px;letter-spacing:.07em}
+.pdf-table-card td{padding:13px 12px;vertical-align:middle}
+.pdf-table-card tbody tr{transition:background .15s}
+.pdf-table-card tbody tr:hover{background:#f6f8fc}
+.pdf-table-card tbody tr:last-child td{border-bottom:0}
+.dashboard-th-content{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.dashboard-th-filter{display:inline-grid;place-items:center;flex:0 0 36px;width:36px;height:36px;padding:0;border:1px solid transparent;border-radius:7px;background:transparent;color:#64748b}
+.dashboard-th-filter:hover,.dashboard-th-filter[aria-pressed=true]{background:#dfe7f4;border-color:#cbd5e1;color:var(--navy);transform:none}
+.dashboard-th-filter .ms{font-size:17px}
+.dashboard-th-filter.has-filter{background:#dce7ff;border-color:#b9c9e5;color:var(--navy)}
+.dashboard-filter-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 10px;color:var(--muted);font-size:12px}
+.generic-table-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 10px;color:var(--muted);font-size:12px}
+.generic-table-toolbar[hidden]{display:none}
+.dashboard-filter-reset{padding:6px 10px;background:#fff;color:var(--navy);border-color:#cbd5e1;font-size:11px}
+.dashboard-filter-menu{position:fixed;inset:auto;width:290px;max-height:min(440px,calc(100vh - 24px));overflow:auto;padding:12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:var(--text);box-shadow:0 14px 36px rgba(24,45,91,.2);z-index:1000}
+.dashboard-filter-menu::backdrop{background:transparent}
+.dashboard-filter-menu[popover]{position:fixed;margin:0}
+.dashboard-filter-menu h3{margin:0 0 9px;font-size:14px}
+.dashboard-filter-menu-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.dashboard-filter-menu-actions button{padding:7px 8px;font-size:11px}
+.dashboard-filter-search{height:35px;margin-bottom:8px;font-size:12px}
+.dashboard-filter-select-all,.dashboard-filter-option{display:flex;align-items:center;gap:8px;min-height:34px;padding:6px 7px;border-radius:6px;font-size:12px}
+.dashboard-filter-select-all:hover,.dashboard-filter-option:hover{background:#f3f6fb}
+.dashboard-filter-select-all input,.dashboard-filter-option input{width:15px;height:15px;flex:0 0 15px;margin:0;accent-color:var(--navy)}
+.dashboard-filter-options{max-height:210px;overflow:auto;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5px 0}
+.dashboard-filter-option span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dashboard-filter-menu-footer{display:flex;justify-content:flex-end;gap:7px;padding-top:10px}
+.dashboard-filter-menu-footer button{padding:8px 11px;font-size:11px}
+.dashboard-filter-apply{background:var(--navy);border-color:var(--navy);color:#fff}
+.dashboard-mobile-filter-menu{display:none}
+.dashboard-table tbody tr{transition:background .15s}
+.dashboard-table tbody tr:hover{background:#f6f8fc}
+.dashboard-table tbody tr:last-child td{border-bottom:0}
+.dashboard-st-number{color:var(--navy);font-weight:700}
+.dashboard-purpose{display:block;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dashboard-subtext{display:block;margin-top:4px;color:var(--muted);font-size:11px}
+.dashboard-mobile-list{display:none}
+.dashboard-mobile-card{padding:15px;border:1px solid var(--border);border-radius:11px;background:#fff}
+.account-toolbar{display:grid;grid-template-columns:minmax(220px,1fr) repeat(2,minmax(150px,190px));gap:12px;align-items:end}
+.account-toolbar label{margin:0}
+.account-toolbar input,.account-toolbar select{margin-top:6px}
+.account-fields{grid-template-columns:minmax(0,1fr);width:100%;max-width:none;margin:18px 0;gap:18px}
+.account-create-card{width:100%;max-width:none;padding:24px}
+.account-create-card h3{margin-bottom:6px}
+.account-create-card .account-fields label{width:100%}
+.account-edit-dialog{width:min(560px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 32px);padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24);overflow:auto}
+.account-edit-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.account-edit-dialog h3{margin:0 0 7px;color:var(--navy);font-size:18px}
+.account-edit-dialog>p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.account-edit-dialog .account-fields{max-width:none;margin:18px 0;gap:16px}
+.account-edit-actions{display:flex;justify-content:flex-end;gap:9px}
+.account-edit-actions button{min-width:120px}
+.account-actions{display:flex;flex-wrap:wrap;gap:6px}
+.account-actions button{padding:7px 9px;font-size:11px}
+.account-action-select{width:160px;min-width:160px;padding:8px 10px}
+.account-password-control{display:flex;align-items:center;gap:8px;margin:7px 0 0;color:var(--muted);font-size:12px}
+.account-password-control input{width:16px;height:16px;margin:0;accent-color:var(--navy)}
+.account-form-actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:14px}
+.account-help{margin:0 0 14px;color:var(--muted);font-size:12px;line-height:1.55}
+.account-status{display:inline-flex;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700}
+.account-status.is-active{background:#dcfce7;color:#166534}
+.account-status.is-inactive{background:#fee2e2;color:#991b1b}
+.account-password-dialog{width:min(440px,calc(100vw - 32px));max-width:none;padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24)}
+.account-password-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.account-info-dialog{width:min(500px,calc(100vw - 32px));max-width:none;padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24)}
+.account-info-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.account-info-dialog h3{margin:0 0 5px;font-size:18px}
+.account-info-dialog>p{margin:0;color:var(--muted);font-size:12px}
+.account-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.account-info-item{min-width:0;padding:11px 12px;border:1px solid var(--border);border-radius:9px;background:#f8fafc}
+.account-info-item span{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.account-info-item strong{display:block;overflow-wrap:anywhere;color:var(--text);font-size:13px;font-weight:600}
+.account-info-actions{display:flex;justify-content:flex-end}
+.account-password-dialog h3{margin:0 0 8px;font-size:18px}
+.account-password-dialog p{color:var(--muted);font-size:13px;line-height:1.55}
+.account-password-actions{display:flex;justify-content:flex-end;gap:9px}
+.account-password-actions button{min-width:110px}
+.dashboard-mobile-card+.dashboard-mobile-card{margin-top:10px}
+.dashboard-mobile-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.dashboard-mobile-number{color:var(--navy);font-weight:700;overflow-wrap:anywhere}
+.dashboard-mobile-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px 0}
+.dashboard-mobile-fact{min-width:0}.dashboard-mobile-fact.full{grid-column:1/-1}
+.dashboard-mobile-label{display:block;margin-bottom:4px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.dashboard-mobile-value{display:block;overflow-wrap:anywhere;line-height:1.45}
+.dashboard-mobile-actions{padding-top:11px;border-top:1px solid var(--border);text-align:right}
+.dashboard-empty{padding:24px 12px;color:var(--muted);text-align:center}
+.pdf-intro{margin:-4px 0 18px;color:var(--muted);line-height:1.6}
+.pdf-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:16px}
+.pdf-card{display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch;padding:20px;margin:0;border:1px solid var(--border);border-radius:12px;background:#fff;box-shadow:0 3px 12px rgba(36,48,71,.035)}
+.pdf-card-info{min-width:0}
+.pdf-card-info h3{margin:2px 0 10px;color:var(--navy);font-size:18px;line-height:1.4;overflow-wrap:anywhere}
+.pdf-card-label{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.pdf-card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;color:var(--muted);font-size:12px}
+.pdf-card-employees{min-height:72px;margin-top:16px;padding-top:13px;border-top:1px solid #edf0f5}
+.pdf-card-employee-list{display:flex;flex-wrap:wrap;gap:7px;margin:0;padding:0;list-style:none}
+.pdf-card-employee{padding:6px 10px;border:1px solid #dbe3ef;border-radius:999px;background:#f5f7fb;color:#334155;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.pdf-card-empty{color:var(--muted);font-size:12px}
+.pdf-card-main{display:grid;width:100%;grid-template-rows:1fr auto;gap:14px}
+.pdf-choose-button{width:100%;min-height:42px;white-space:nowrap}
+.pdf-selection-dialog{width:min(640px,calc(100vw - 28px));max-width:none;max-height:calc(100dvh - 32px);padding:20px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.28);overflow:auto}
+.pdf-selection-dialog::backdrop{background:rgba(17,31,57,.58);backdrop-filter:blur(2px)}
+.pdf-selection-content{display:grid;gap:16px}
+.pdf-selection-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.pdf-selection-header h3{margin:0 0 5px;color:var(--navy);font-size:17px;overflow-wrap:anywhere}
+.pdf-selection-header p{margin:0;color:var(--muted);font-size:12px}
+.pdf-selection-close{flex:0 0 auto}
+.pdf-documents{min-width:0}
+.pdf-documents-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;color:#475569;font-size:12px;font-weight:700}
+.pdf-documents-heading label,.pdf-doc-option{display:flex;align-items:center;gap:8px;margin:0;font-weight:500;cursor:pointer}
+.pdf-documents-heading input,.pdf-doc-option input{width:16px;height:16px;flex:0 0 auto;margin:0;accent-color:var(--navy)}
+.pdf-doc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;padding:12px;border:1px solid var(--border);border-radius:9px;background:#f8fafc}
+.pdf-doc-option{min-width:0;color:#334155;font-size:12px;line-height:1.4}
+.pdf-output-choice{display:flex;flex-wrap:wrap;gap:14px;align-items:center;min-width:0;margin:0;padding:10px 12px;border:1px solid var(--border);border-radius:9px}
+.pdf-output-choice legend{margin-bottom:6px;color:#475569;font-size:12px;font-weight:700}
+.pdf-output-choice label{display:flex;align-items:center;gap:7px;margin:0;color:#334155;font-size:12px;font-weight:500}
+.pdf-output-choice input{width:16px;height:16px;margin:0;accent-color:var(--navy)}
+.pdf-selection-error{grid-column:1/-1;margin:0;color:#b42318;font-size:12px}
+.pdf-selection-submit{justify-self:stretch;min-height:44px}
+.pdf-selection-error{margin:0;padding:10px 12px;border:1px solid #f1b8b5;border-radius:8px;background:#fff1f0;color:#a61b1b;font-size:13px;line-height:1.5}
+.pdf-archive-preview{display:none;height:100%;overflow:auto;padding:24px;background:#f4f6fa}
+.pdf-archive-preview h4{margin:0 0 8px;color:var(--navy)}
+.pdf-archive-preview p{color:var(--muted);font-size:13px}
+.pdf-archive-preview ul{display:grid;gap:8px;margin:16px 0;padding-left:22px}
+.pdf-preview-dialog{width:min(1000px,calc(100vw - 32px));height:min(88vh,820px);max-width:none;max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.28);overflow:hidden}
+.pdf-preview-dialog::backdrop{background:rgba(17,31,57,.62);backdrop-filter:blur(2px)}
+.pdf-preview-layout{display:grid;grid-template-rows:auto minmax(0,1fr);height:100%;min-height:0}
+.pdf-preview-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.pdf-preview-header h3{margin:0;color:var(--navy);font-size:16px;overflow-wrap:anywhere}
+.pdf-preview-actions{display:flex;flex:0 0 auto;align-items:center;gap:8px}
+.pdf-preview-actions button,.pdf-preview-actions a{min-height:38px;padding:8px 12px}
+.pdf-preview-frame,.pdf-archive-preview{grid-row:2;grid-column:1}
+.pdf-preview-frame{width:100%;height:100%;min-height:0;border:0;background:#eef2f7}
+@media(max-width:640px){.pdf-list{grid-template-columns:minmax(0,1fr);gap:12px}.pdf-card{padding:16px}.pdf-card-employees{min-height:0}.pdf-doc-grid{grid-template-columns:minmax(0,1fr)}.pdf-selection-dialog{padding:16px}.pdf-preview-dialog{width:calc(100vw - 16px);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);border-radius:10px}.pdf-preview-header{align-items:flex-start;padding:12px;gap:8px}.pdf-preview-actions{gap:5px}.pdf-preview-actions button,.pdf-preview-actions a{padding:7px 9px;font-size:12px}.pdf-preview-frame{min-height:0}}
+.b{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:#e8edf6;color:#34435f}.DRAFT{background:#edf0f5;color:#475569}.DIAJUKAN{background:#fff1c2;color:#795600}.TERBIT{background:#dce7ff;color:#20386f}.SELESAI{background:#dcfce7;color:#166534}.DIBATALKAN{background:#fee2e2;color:#991b1b}
+#login-wrap{min-height:100vh;display:grid;place-items:center;padding:32px 24px;background:var(--bg)}
+#login-card{width:min(1120px,100%);min-height:620px;display:grid;grid-template-columns:.88fr 1.12fr;background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.login-brand{position:relative;overflow:hidden;padding:42px 38px;background:linear-gradient(150deg,var(--navy-deep),var(--navy));color:#f8faff;display:flex;flex-direction:column}
+.login-brand:before,.login-brand:after{content:'';position:absolute;border:1px solid rgba(255,185,20,.25);border-radius:50%;pointer-events:none}.login-brand:before{width:310px;height:310px;right:-150px;top:15%}.login-brand:after{width:220px;height:220px;right:-115px;top:23%}
+.login-brand-head{display:flex;align-items:center;gap:14px;position:relative;z-index:1}.login-brand-head img{width:62px;height:62px;object-fit:cover;border-radius:12px;background:#fff}.login-brand-head span{display:block;color:#d7e0f2;font-size:11px;letter-spacing:.09em;text-transform:uppercase}.login-brand-head strong{display:block;color:#fff;font:700 15px 'Plus Jakarta Sans';margin-top:4px}
+.login-intro{position:relative;z-index:1;margin:auto 0;padding:54px 0 38px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:#ffe19a;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.eyebrow:before{content:'';width:24px;height:3px;background:var(--yellow);border-radius:9px}
+.login-intro h1{max-width:390px;color:#fff;font-size:clamp(28px,3vw,38px);line-height:1.18;margin:18px 0 15px}.login-intro p{max-width:390px;color:#d0daec;font-size:14px;line-height:1.8;margin:0}
+.login-highlights{position:relative;z-index:1;display:grid;gap:10px}.login-highlight{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.065);color:#edf2fb;font-size:12px;line-height:1.5}.login-highlight .ms{color:var(--yellow)}
+.login-footer{position:relative;z-index:1;margin-top:26px;color:#c1cde1;font-size:11px}
+.login-form{padding:44px clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:center}.login-form h2{font-size:25px;margin:18px 0 8px;color:var(--text)}.login-form>p{color:var(--muted);line-height:1.65;margin:0 0 27px}.login-form label{margin-bottom:15px}.login-form label input{margin-top:7px;padding:12px 13px}.login-mark{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}.login-mark img{width:34px;height:34px;object-fit:cover;border-radius:8px;background:#fff}.login-mark strong{color:var(--navy);font:700 14px 'Plus Jakarta Sans'}
+.login-submit{width:100%;margin-top:8px;padding:13px}.login-note{margin-top:18px;padding:12px 14px;border:1px solid var(--border);border-radius:9px;background:#f8fafc;color:var(--muted);font-size:11px;line-height:1.6}
+#toast{position:fixed;top:18px;right:18px;background:var(--danger);color:#fff;padding:13px 17px;border-radius:10px;display:none;max-width:min(420px,calc(100vw - 36px));z-index:50;box-shadow:0 8px 24px rgba(24,45,91,.18)}
+.dashboard-load-error{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:22px 12px;color:var(--danger);text-align:center}
+.dashboard-load-state{padding:22px 12px;color:var(--muted);text-align:center}
+.dashboard-date-range{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.dashboard-date-range label{font-size:11px}
+.dashboard-date-range input{margin-top:5px;padding:8px;font-size:12px}
+.app-action-dialog{width:min(460px,calc(100vw - 32px));max-width:none;padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24)}
+.app-action-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.app-action-dialog h3{margin:0 0 8px;font-size:18px}
+.app-action-dialog p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+.app-action-dialog label{display:block;margin-top:15px}
+.app-action-dialog textarea{display:block;min-height:96px;margin-top:6px;resize:vertical}
+.app-action-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.app-action-dialog-actions button{min-width:110px}
+.app-action-dialog .bd{background:var(--danger);color:#fff;border-color:var(--danger)}
+.workspace{flex:1;min-width:0}
+.topbar{height:68px;position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:20px;padding:0 28px;background:#f3f6fc;border-bottom:1px solid #dce4f1}
+.topbar-brand{display:flex;align-items:center;gap:11px;flex:0 0 auto;color:var(--navy);text-decoration:none}
+.topbar-logo{display:block;width:38px;height:38px;object-fit:cover;border-radius:8px}
+.topbar-brand-copy{display:block;min-width:0;color:var(--navy);font:700 14px 'Plus Jakarta Sans';letter-spacing:.02em;white-space:nowrap}
+.topbar-brand-copy small{display:block;margin-top:2px;color:var(--muted);font:400 10px Inter,sans-serif;letter-spacing:0}
+.topbar-search{position:relative;display:flex;align-items:center;width:min(410px,42vw);flex:0 1 410px;margin:0 auto}
+.topbar-search .ms{position:absolute;left:12px;color:var(--muted);pointer-events:none}
+.topbar-search input{height:38px;padding:8px 12px 8px 40px;border-color:#d9e0eb;border-radius:9px;background:#f8fafc}
+.topbar-search input:focus{background:#fff}
+.topbar-actions{display:flex;align-items:center;gap:10px;margin-left:0}
+.topbar-menu{position:relative}
+.topbar-menu>summary{list-style:none;cursor:pointer}.topbar-menu>summary::-webkit-details-marker{display:none}
+.topbar-icon-button{width:38px;height:38px;display:grid;place-items:center;padding:0;background:transparent;border:1px solid transparent;border-radius:9px;color:#475569}
+.notification-icon{position:relative}
+.notification-badge{position:absolute;top:0;right:0;min-width:17px;height:17px;padding:0 4px;border:2px solid #f3f6fc;border-radius:10px;background:#c24136;color:#fff;font-size:9px;font-weight:700;line-height:13px;text-align:center}
+.topbar-menu>summary:focus-visible{outline:3px solid rgba(32,56,111,.2);outline-offset:2px}
+.topbar-icon-button:hover,.topbar-menu[open]>.topbar-icon-button{background:#f1f4f9;border-color:#e1e6ef;transform:none}
+.topbar-profile-button{display:flex;align-items:center;gap:9px;width:auto;padding:4px 9px 4px 5px}
+.topbar-avatar{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e7edf7;color:var(--navy);font-size:12px;font-weight:700}
+.topbar-profile-copy{text-align:left;line-height:1.25}
+.topbar-profile-copy strong,.topbar-profile-copy small{display:block;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar-profile-copy strong{font-size:12px;color:var(--text)}.topbar-profile-copy small{margin-top:3px;color:var(--muted);font-size:10px}
+.topbar-popover{position:absolute;top:calc(100% + 9px);right:0;z-index:40;width:min(320px,calc(100vw - 24px));padding:14px;border:1px solid var(--border);border-radius:11px;background:#fff;box-shadow:0 12px 32px rgba(24,45,91,.13)}
+.notification-popover{width:min(360px,calc(100vw - 24px));padding:0;overflow:hidden}
+.notification-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid var(--border)}
+.notification-heading h3{margin:0}
+.notification-read-all{padding:4px 0;border:0;background:transparent;color:var(--navy);font-size:11px;font-weight:600;cursor:pointer}
+.notification-read-all:hover{background:transparent;color:#38599a;transform:none}
+.notification-list{max-height:min(390px,60vh);overflow:auto}
+.notification-item{display:block;width:100%;padding:12px 14px;border:0;border-bottom:1px solid #edf0f5;border-radius:0;background:#fff;color:var(--text);text-align:left;white-space:normal}
+.notification-item:hover{background:#f7f9fc;transform:none}
+.notification-item.is-unread{background:#f4f7fd}
+.notification-item-title{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:var(--navy);font-size:12px;font-weight:700}
+.notification-unread-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#c24136}
+.notification-item-message{display:block;font-size:11px;line-height:1.5;color:#475569}
+.notification-item-time{display:block;margin-top:5px;color:var(--muted);font-size:10px}
+.notification-empty{margin:0;padding:18px 14px;color:var(--muted);font-size:12px;text-align:center}
+.topbar-popover h3{margin:0 0 8px;font-size:14px}
+.topbar-empty{margin:0;padding:12px 0;color:var(--muted);font-size:12px;line-height:1.5}
+.topbar-account{margin:0 0 12px;color:var(--muted);font-size:12px}
+.profile-info-dialog{width:min(460px,calc(100vw - 32px));max-width:none;padding:22px;border:1px solid var(--border);border-radius:14px;background:#fff;color:var(--text);box-shadow:0 20px 60px rgba(24,45,91,.24)}
+.profile-info-dialog::backdrop{background:rgba(17,31,57,.56);backdrop-filter:blur(2px)}
+.profile-info-dialog h3{margin:0 0 5px;color:var(--navy);font-size:18px}
+.profile-info-dialog>p{margin:0;color:var(--muted);font-size:12px}
+.profile-info-grid{display:grid;gap:9px;margin:17px 0}
+.profile-info-grid div{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:12px}
+.profile-info-grid span{flex:0 0 auto;color:var(--muted)}
+.profile-info-grid strong{min-width:0;color:var(--text);font-weight:600;text-align:right;overflow-wrap:anywhere}
+.profile-info-actions{display:flex;justify-content:flex-end}
+#profile-menu .topbar-popover{display:grid;gap:8px}
+#profile-menu .topbar-popover h3{margin:0 0 2px}
+#profile-menu .topbar-account{margin:0 0 4px}
+.topbar-logout{display:flex;width:100%;align-items:center;gap:9px;text-align:left}
+.topbar-logout .ms{font-size:18px}
+#nav-toggle{display:inline-flex;width:36px;height:36px;flex:0 0 36px;padding:0;align-items:center;justify-content:center;border:1px solid transparent;border-radius:9px;background:transparent;color:#475569;cursor:pointer}
+#nav-toggle:hover{background:#f1f4f9}
+#nav-toggle:focus-visible{outline:3px solid rgba(32,56,111,.2);outline-offset:2px}
+#nav-shade{display:none}
+@media(max-width:900px){aside{flex-basis:230px;width:230px}.topbar{gap:12px;padding:0 16px}.topbar-search{width:min(360px,34vw)}main{padding:24px 20px}.login-brand{padding:34px 28px}.login-form{padding:34px 30px}}
+@media(max-width:700px){#login-wrap{padding:16px}#login-card{grid-template-columns:1fr;min-height:0}.login-brand{padding:24px 24px 21px;min-height:310px}.login-intro{margin:32px 0 22px;padding:0}.login-intro h1{font-size:27px;margin:12px 0 9px}.login-intro p{font-size:13px}.login-highlights{grid-template-columns:1fr 1fr;gap:8px}.login-highlight{padding:9px;font-size:11px}.login-footer{display:none}.login-form{padding:27px 24px 30px}.login-form h2{font-size:22px;margin-top:14px}
+ #app{display:block}.app-layout{display:block;min-height:calc(100vh - 60px)}aside{display:flex;flex-direction:column;position:fixed;inset:60px auto 0 0;width:min(290px,84vw);height:calc(100dvh - 60px);transform:translateX(-105%);transition:transform .2s ease;box-shadow:var(--shadow);z-index:25}aside nav{flex:1}#app.nav-open aside{transform:translateX(0)}#app.nav-collapsed aside{width:min(290px,84vw);padding:16px 14px}#nav-shade{position:fixed;inset:60px 0 0;background:rgba(15,23,42,.45);z-index:24}#app.nav-open #nav-shade{display:block}.topbar{height:60px;gap:9px;padding:0 12px}.topbar-brand{gap:7px}.topbar-logo{width:32px;height:32px}.topbar-brand-copy{display:none}.topbar-search{width:auto;min-width:90px;flex:1;margin:0 3px}.topbar-search input{height:36px;padding-left:35px}.topbar-search .ms{left:10px;font-size:18px}.topbar-actions{gap:3px;margin-left:0}.topbar-icon-button{width:36px;height:36px}.topbar-profile-button{padding:3px}.topbar-profile-copy,.profile-chevron{display:none}#nav-toggle{width:34px;height:34px;flex-basis:34px}main{padding:16px;min-height:calc(100vh - 60px)}.bar h2{font-size:19px}.card{padding:15px;border-radius:11px}}
+@media(max-width:420px){.login-brand{min-height:0;padding:20px}.login-brand-head img{width:48px;height:48px}.login-intro{margin:24px 0 17px}.login-intro h1{font-size:24px}.login-highlights{grid-template-columns:1fr}.login-highlight:nth-child(2){display:none}.login-form{padding:23px 20px}.g{grid-template-columns:1fr}}
+@media(max-width:560px){#f.st-form .st-date-pair{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){.st-purpose{margin:-15px -15px 14px;padding:14px 15px}.st-summary-facts{grid-template-columns:minmax(0,1fr)}.st-fact{padding:12px}.cost-total-bar{align-items:flex-start;flex-direction:column;gap:6px}}
+@media(max-width:900px){.dashboard-tools{grid-template-columns:minmax(200px,1fr) minmax(145px,170px);}.dashboard-tools #dl{min-width:0}.dashboard-tools .btn{justify-self:end}}
+@media(max-width:700px){.scorecards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.scorecard{min-height:100px;padding:12px;gap:8px;align-items:flex-start;flex-direction:column}.scorecard-static{grid-template-columns:34px minmax(0,1fr);gap:9px;min-height:78px;padding:12px;align-items:center}.scorecard-static .scorecard-copy{grid-column:2}.scorecard-static .scorecard-value{font-size:14px}.scorecard-icon{flex-basis:34px;width:34px;height:34px}.scorecard-value{font-size:20px}.dashboard-table{padding:12px}.dashboard-table .table-wrap{display:none}.dashboard-mobile-filter-menu{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 12px}.dashboard-mobile-filter-menu button{min-height:40px;padding:8px 10px;background:#fff;color:var(--navy);border-color:#cbd5e1;font-size:11px}.dashboard-mobile-filter-menu button.has-filter{background:#e8efff;border-color:#9eb3d6}.dashboard-mobile-list{display:block}}
+@media(max-width:560px){.dashboard-tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.dashboard-tools input{grid-column:1/-1}.dashboard-tools select{width:100%;min-width:0}.dashboard-tools #dl{min-width:0}.dashboard-title-row{align-items:flex-start}.dashboard-title-row h2{max-width:55%}.dashboard-create-button{white-space:normal}}
+@media(max-width:640px){.account-toolbar{grid-template-columns:minmax(0,1fr)}.account-form-actions,.account-password-actions,.account-edit-actions{align-items:stretch;flex-direction:column}.account-form-actions button,.account-password-actions button,.account-edit-actions button{width:100%}.account-actions{min-width:190px}.account-edit-dialog,.account-info-dialog{padding:17px}.account-info-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:420px){.scorecard-icon{margin-bottom:1px}.scorecard-static .scorecard-icon{margin-bottom:0}.dashboard-mobile-facts{gap:10px}}
+</style></head><body><div id="toast" role="status" aria-live="polite" aria-atomic="true"></div><div id="root"></div>
+<script>
+const $=s=>document.querySelector(s),rp=n=>{let v=BigInt(n??0),neg=v<0n;if(neg)v=-v;return `${neg?'-':''}Rp ${v.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}`};let TOK=localStorage.t,U=null,routeVersion=0,toastTimer,notificationTimer,notificationSequence=0;
+const toast=(m,ok)=>{const t=$('#toast');t.textContent=m;t.style.background=ok?'#15803d':'';t.setAttribute('role',ok?'status':'alert');t.setAttribute('aria-live',ok?'polite':'assertive');t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',4500)};
+function apiError(message,notify=true){const error=new Error(message);error.uiNotified=notify;return error}
+async function api(p,o={}){const target=p==='/login'?'/api/v1/auth/login':p==='/me'?'/api/v1/auth/me':p.startsWith('/api')?p:`/api/v1${p.startsWith('/')?p:'/'+p}`;let r;
+ try{r=await fetch(target,{method:o.method||(o.body?'POST':'GET'),headers:{'Content-Type':'application/json',Authorization:'Bearer '+TOK},body:o.body?JSON.stringify(o.body):undefined})}
+ catch(error){toast('Server tidak dapat dijangkau. Periksa koneksi lalu coba lagi.');error.uiNotified=true;throw error}
+ if(r.status==401&&target!='/api/v1/auth/login'){logout();throw apiError('Sesi berakhir',true)}
+ let d;try{d=await r.json()}catch(error){if(r.ok){toast('Respons server tidak dapat dibaca. Coba muat ulang halaman.');throw apiError('Respons API tidak valid',true)}d={}}
+ if(!r.ok){const e=d?.error||d?.detail?.error;const message=e?(e.code?.startsWith('V')?e.code+': ':'')+e.message:'Error '+r.status;toast(message);throw apiError(message,true)}return d}
+const logout=()=>{localStorage.removeItem('t');TOK=null;U=null;draw()};
+async function loadNotifications(){const list=$('#notification-list');if(!list)return;const sequence=++notificationSequence;try{const data=await api('/notifikasi');if(sequence!==notificationSequence)return;const items=Array.isArray(data.items)?data.items:[],unreadCount=Number(data.unread_count)||0,badge=$('#notification-badge'),readAll=$('#notification-read-all');if(badge){badge.textContent=unreadCount>99?'99+':String(unreadCount);badge.hidden=unreadCount===0;badge.setAttribute('aria-label',`${unreadCount} notifikasi belum dibaca`)}if(readAll)readAll.disabled=unreadCount===0;list.innerHTML=items.length?items.map(item=>`<button class="notification-item ${item.read_at?'':'is-unread'}" type=button onclick="readNotification(event,${Number(item.id)})"><span class=notification-item-title>${item.read_at?'':'<span class=notification-unread-dot aria-hidden=true></span>'}${esc(item.title||'Notifikasi')}</span><span class=notification-item-message>${esc(item.message||'')}</span><span class=notification-item-time>${esc(formatWib(item.created_at))}</span></button>`).join(''):'<p class=notification-empty>Belum ada notifikasi.</p>'}catch(error){if(!error?.uiNotified)toast('Notifikasi gagal dimuat. Coba buka kembali menu notifikasi.')}}
+window.readNotification=async(event,id)=>{event.preventDefault();const button=event.currentTarget;if(button.disabled)return;button.disabled=true;try{await api(`/notifikasi/${encodeURIComponent(id)}/dibaca`,{method:'PUT'});await loadNotifications()}catch(error){if(!error?.uiNotified)toast('Notifikasi gagal ditandai dibaca. Coba lagi.')}finally{button.disabled=false}};
+window.readAllNotifications=async button=>{if(button.disabled)return;button.disabled=true;try{await api('/notifikasi/dibaca-semua',{method:'PUT'});await loadNotifications()}catch(error){if(!error?.uiNotified)toast('Notifikasi gagal ditandai dibaca. Coba lagi.')}finally{button.disabled=false}};
+const ALL=['ADMIN','OPERATOR','PPK','BENDAHARA','PEGAWAI'],ADMIN_MENU=new Set(['dash','cetak','pegawai','tarif','pejabat','dasar_hukum','satker','audit','users']),M=[['Menu Utama'],['dash','Halaman Utama','home',ALL],['buat','Surat Tugas','assignment',['OPERATOR']],['setuju','Persetujuan / Penerbitan','task_alt',['PPK']],['cetak','Cetak Dokumen','print',ALL],
+['Master Data'],['pegawai','Data Pegawai','groups',[]],['tarif','Tarif SBM','payments',[]],['pejabat','Pejabat Penanda Tangan','draw',[]],['dasar_hukum','Dasar Hukum','gavel',[]],['satker','Identitas Satker','apartment',[]],
+['Laporan & Log'],['audit','Audit Trail','history',[]],['Pengaturan Sistem'],['users','Kelola Akun','manage_accounts',[]]];
+const ok=m=>U.role=='ADMIN'?ADMIN_MENU.has(m[0]):m[3].includes(U.role);
+async function draw(){clearInterval(notificationTimer);if(!TOK)return $('#root').innerHTML=`<div id=login-wrap><section id=login-card><div class=login-brand><div class=login-brand-head><img src="/assets/logo-kementerian-pu.png" alt="Lambang Kementerian Pekerjaan Umum"><div><span>Kementerian Pekerjaan Umum</span><strong>PEJADIN · Perjalanan Dinas</strong></div></div><div class=login-intro><span class=eyebrow>Layanan administrasi kedinasan</span><h1>Perjalanan dinas yang tertib dan akuntabel.</h1><p>Kelola Surat Tugas, perjalanan dinas, perhitungan biaya, dan dokumen dalam satu sistem terpadu.</p></div><div class=login-highlights><div class=login-highlight><span class=ms>assignment</span><span>Pengajuan dan proses Surat Tugas</span></div><div class=login-highlight><span class=ms>receipt_long</span><span>Perhitungan biaya dan dokumen perjalanan</span></div><div class=login-highlight><span class=ms>history</span><span>Riwayat aktivitas tercatat</span></div></div><div class=login-footer>Sistem informasi perjalanan dinas satuan kerja</div></div><form id=login class=login-form><div class=login-mark><img src="/assets/logo-kementerian-pu.png" alt=""><span><strong>PEJADIN</strong><br>Sistem Informasi Perjalanan Dinas</span></div><h2>Masuk ke sistem</h2><p>Gunakan akun kedinasan Anda untuk melanjutkan.</p><label>Nama pengguna<input name=username autocomplete=username required></label><label>Kata sandi<input name=password type=password autocomplete=current-password required></label><button class=login-submit type=submit>Masuk</button><div class=login-note>Akses sistem hanya untuk pengguna yang memiliki akun PEJADIN.</div></form></section></div>`,$('#login').onsubmit=async e=>{e.preventDefault();const button=e.currentTarget.querySelector('button[type=submit]');if(button.disabled)return;button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='Memeriksa...';try{const r=await api('/login',{body:Object.fromEntries(new FormData(e.target))});TOK=localStorage.t=r.token;U=r.user;location.hash='dash';await draw()}catch(error){if(!error?.uiNotified)toast('Login gagal. Periksa koneksi lalu coba lagi.')}finally{button.disabled=false;button.removeAttribute('aria-busy');button.textContent='Masuk'}};
+ if(!U)U=await api('/me');const mn=M.filter((m,i)=>m.length==1?M.slice(i+1).find(x=>x.length>1&&true)&&M.slice(i+1,M.findIndex((x,j)=>j>i&&x.length==1)<0?99:M.findIndex((x,j)=>j>i&&x.length==1)).some(ok):ok(m));
+ const displayName=String(U.nama||U.username||'Pengguna'),initials=displayName.trim().split(/\s+/).slice(0,2).map(part=>part[0]||'').join('').toUpperCase()||'P';
+ $('#root').innerHTML=`<div id=app><header class=topbar aria-label="Header utama">
+ <div class=topbar-brand><button id=nav-toggle type=button aria-label="Buka atau tutup navigasi" aria-expanded=true aria-controls=sidebar onclick="toggleNav(true)"><span class=ms aria-hidden=true>menu</span></button><a href="#dash" aria-label="PEJADIN - Halaman Utama"><img class=topbar-logo src="/assets/logo-kementerian-pu.png" alt="Lambang Kementerian Pekerjaan Umum"></a><span class=topbar-brand-copy>PEJADIN<small>Sistem Informasi Perjalanan Dinas</small></span></div>
+ <form class=topbar-search role=search onsubmit="submitSTSearch(event)"><span class=ms aria-hidden=true>search</span><input id=global-search type=search aria-label="Cari Surat Tugas" placeholder="Cari Surat Tugas..." autocomplete=off></form>
+ <div class=topbar-actions>
+  <details id=notification-menu class=topbar-menu><summary class="topbar-icon-button notification-icon" aria-label="Notifikasi" title="Notifikasi"><span class=ms aria-hidden=true>notifications</span><span id=notification-badge class=notification-badge hidden></span></summary><div class="topbar-popover notification-popover"><div class=notification-heading><h3>Notifikasi</h3><button id=notification-read-all class=notification-read-all type=button onclick="readAllNotifications(this)">Tandai semua dibaca</button></div><div id=notification-list class=notification-list aria-live=polite><p class=notification-empty>Memuat notifikasi...</p></div></div></details>
+  <details id=profile-menu class=topbar-menu><summary class="topbar-icon-button topbar-profile-button" aria-label="Menu akun"><span class=topbar-avatar aria-hidden=true>${esc(initials)}</span><span class=topbar-profile-copy><strong>${esc(displayName)}</strong><small>${esc(U.role||'Pengguna')}</small></span><span class="ms profile-chevron" aria-hidden=true>expand_more</span></summary><div class=topbar-popover><h3>${esc(displayName)}</h3><p class=topbar-account>${esc(U.role||'Pengguna')}</p><button type=button class="btn2 topbar-logout" onclick="this.closest('details').open=false;document.querySelector('#profile-info-dialog').showModal()"><span class=ms aria-hidden=true>info</span>Info akun</button><button type=button class="btn2 topbar-logout" onclick="logout()"><span class=ms aria-hidden=true>logout</span>Keluar</button></div></details><dialog id=profile-info-dialog class=profile-info-dialog aria-labelledby=profile-info-title onclick="if(event.target===this)this.close()" onkeydown="if(event.key==='Escape'){event.preventDefault();this.close()}"><h3 id=profile-info-title>Info akun</h3><p>Informasi akun yang sedang digunakan.</p><div class=profile-info-grid><div><span>Nama pengguna</span><strong>${esc(U.username||'-')}</strong></div><div><span>Pegawai</span><strong>${esc(U.nama_pegawai||'Tidak terhubung')}</strong></div>${U.pegawai_nip?`<div><span>NIP</span><strong>${esc(U.pegawai_nip)}</strong></div>`:''}<div><span>Peran</span><strong>${esc(U.role||'Pengguna')}</strong></div><div><span>Status</span><strong>${U.aktif?'Aktif':'Nonaktif'}</strong></div><div><span>Akun dibuat</span><strong>${U.created_at?esc(formatWib(U.created_at)):'-'}</strong></div><div><span>Terakhir masuk</span><strong>${U.last_login?esc(formatWib(U.last_login)):'-'}</strong></div></div><div class=profile-info-actions><button type=button class=btn2 onclick="this.closest('dialog').close()">Tutup</button></div></dialog>
+ </div></header><div class=app-layout><div id=nav-shade aria-hidden=true onclick="toggleNav(false)"></div><aside id=sidebar aria-label="Navigasi utama"><button class=sidebar-collapse-button type=button aria-label="Tutup navigasi" title="Tutup navigasi" onclick="toggleNavFromSidebar()"><span class=ms aria-hidden=true>chevron_left</span></button><nav>${mn.map(m=>m.length==1?`<small>${m[0].toUpperCase()}</small>`:m[0]=='buat'?`<div class=nav-group><button type=button class=nav-group-toggle aria-expanded="${['buat','draft'].includes(H().split('/')[0])}" aria-controls=surat-tugas-subnav onclick="toggleStNav(this)"><span class=ms aria-hidden=true>${m[2]}</span>${m[1]}</button><div class=nav-children id=surat-tugas-subnav ${['buat','draft'].includes(H().split('/')[0])?'':'hidden'}><a data-r="buat">Buat Surat Tugas Baru</a><a data-r="draft">Lihat Draft</a></div></div>`:`<a data-r="${m[0]}"><span class=ms aria-hidden=true>${m[2]}</span>${m[1]}</a>`).join('')}</nav><button class=sidebar-logout type=button onclick="logout()"><span class=ms aria-hidden=true>logout</span>Keluar</button></aside><div class=workspace><main id=m></main></div></div></div>`;
+ toggleNav(false);
+ document.querySelectorAll('aside a[data-r]').forEach(link=>link.addEventListener('click',()=>{if(link.hash===location.hash)route()}));
+ document.querySelectorAll('.topbar-menu').forEach(menu=>menu.addEventListener('toggle',()=>{if(menu.open){document.querySelectorAll('.topbar-menu').forEach(other=>{if(other!==menu)other.open=false});if(menu.id==='notification-menu')loadNotifications()}}));
+ route();loadNotifications();notificationTimer=setInterval(()=>{if(document.visibilityState==='visible')loadNotifications()},60000)}
+let pendingSTSearch='';
+window.submitSTSearch=event=>{event.preventDefault();const query=$('#global-search').value.trim();pendingSTSearch=query;if(H().split('/')[0]==='dash')route();else location.hash='dash'};
+document.addEventListener('click',event=>{const target=event.target;if(!(target instanceof Element)||!target.closest('.topbar-menu'))document.querySelectorAll('.topbar-menu[open]').forEach(menu=>menu.open=false)});
+window.toggleStNav=button=>{const expanded=button.getAttribute('aria-expanded')==='true',open=!expanded,children=document.getElementById(button.getAttribute('aria-controls')),currentRoute=H().split('/')[0],isStRoute=['buat','draft'].includes(currentRoute);button.setAttribute('aria-expanded',String(open));children.hidden=!open;button.classList.toggle('is-active',!open||!isStRoute);document.querySelectorAll('aside a[data-r]').forEach(link=>link.classList.toggle('on',open&&isStRoute&&link.dataset.r===currentRoute))};
+window.toggleNavFromSidebar=()=>window.toggleNav(matchMedia('(max-width:700px)').matches?false:true);
+window.toggleNav=open=>{const app=$('#app'),aside=$('#sidebar'),toggle=$('#nav-toggle'),mobile=matchMedia('(max-width:700px)').matches;if(!app||!aside)return;if(mobile){const visible=Boolean(open);app.classList.toggle('nav-open',visible);toggle?.setAttribute('aria-expanded',String(visible));toggle?.setAttribute('aria-label',visible?'Tutup navigasi':'Buka navigasi');aside.inert=!visible;aside.setAttribute('aria-hidden',String(!visible));if(visible)aside.querySelector('a[data-r]')?.focus();else if(toggle&&aside.contains(document.activeElement))toggle.focus()}else{app.classList.remove('nav-open');if(open)app.classList.toggle('nav-collapsed');const visible=!app.classList.contains('nav-collapsed');toggle?.setAttribute('aria-expanded',String(visible));toggle?.setAttribute('aria-label',visible?'Tutup navigasi':'Buka navigasi');aside.inert=!visible;aside.setAttribute('aria-hidden',String(!visible))}};
+addEventListener('resize',()=>toggleNav(false));
+addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#app')?.classList.contains('nav-open'))toggleNav(false);document.querySelectorAll('.topbar-menu[open]').forEach(menu=>menu.open=false)}});
+const R={},H=()=>location.hash.slice(1)||'dash';
+async function route(){const version=++routeVersion,[h,a]=H().split('/');toggleNav(false);const stNavButton=$('.nav-group-toggle'),stNavChildren=$('#surat-tugas-subnav'),stNavActive=['buat','draft'].includes(h);if(stNavButton&&stNavChildren){stNavButton.setAttribute('aria-expanded',String(stNavActive));stNavButton.classList.remove('is-active');stNavChildren.hidden=!stNavActive}document.querySelectorAll('aside a[data-r]').forEach(x=>{x.classList.toggle('on',x.dataset.r==h);x.href='#'+x.dataset.r});
+ if((['buat','edit'].includes(h)&&U.role!=='OPERATOR')||(h==='setuju'&&U.role!=='PPK')){toast('Peran Anda tidak berhak membuka halaman ini.');location.hash='dash';return}const f=R[h]||(['pegawai','tarif','pejabat','dasar_hukum','users'].includes(h)?()=>master(h,version):null);if(f)try{if(['detail','edit'].includes(h))await f(a,version);else await f(version)}catch(error){if(version===routeVersion&&!error?.uiNotified)toast('Halaman gagal dimuat. Coba muat ulang halaman.')} }
+addEventListener('hashchange',()=>U&&route());
+const fd=e=>{const data=Object.fromEntries(new FormData(e));for(const input of e.querySelectorAll('[data-money]')){const value=moneyDigits(data[input.name]);if(value===null)throw new Error('Masukkan nominal Rupiah berupa angka bulat.');if(value===''){data[input.name]='';continue}const amount=Number(value);if(!Number.isSafeInteger(amount))throw new Error('Nominal Rupiah melebihi batas angka yang dapat diproses.');data[input.name]=amount}return data};
+const moneyDigits=value=>{let text=String(value??'').trim().replace(/^Rp\s*/i,'').replace(/[. ]/g,'');if(!text)return '';if(!/^\d+$/.test(text))return null;return text};
+const moneyText=value=>{const digits=moneyDigits(value);if(digits===null||digits==='')return digits;const neg=digits.startsWith('-'),raw=neg?digits.slice(1):digits;return `${neg?'-':''}${raw.replace(/\B(?=(\d{3})+(?!\d))/g,'.')}`};
+const moneyInp=(n,l,v=0,required=false)=>`<label>${l}${required?'<span class="required-mark" aria-hidden="true"> *</span>':''}<span class="money-control"><span class="money-prefix" aria-hidden="true">Rp</span><input name="${n}" type="text" inputmode="numeric" data-money autocomplete="off" placeholder="Masukkan nominal" value="${esc(moneyText(v)??'')}" ${required?'required':''}></span></label>`;
+document.addEventListener('input',event=>{const input=event.target;if(!input.matches('[data-money]'))return;const cursor=input.selectionStart??input.value.length,digitsBefore=input.value.slice(0,cursor).replace(/\D/g,'').length,formatted=moneyText(input.value);if(formatted===null){input.value=input.dataset.lastValid||'';input.setSelectionRange(input.value.length,input.value.length);input.setCustomValidity('Nominal hanya boleh berisi angka dan pemisah ribuan.');input.setAttribute('aria-invalid','true');toast('Nominal hanya boleh berisi angka dan pemisah ribuan.');return}input.setCustomValidity('');input.removeAttribute('aria-invalid');input.value=formatted;input.dataset.lastValid=formatted;let pos=0,count=0;while(pos<formatted.length&&count<digitsBefore){if(/\d/.test(formatted[pos]))count++;pos++}input.setSelectionRange(pos,pos)});
+const inp=(n,l,t='text',v='',required=false,min=null)=>`<label>${l}${required?'<span class="required-mark" aria-hidden="true"> *</span>':''}<input name="${n}" type="${t}" value="${esc(v)}" ${required?'required':''} ${min!==null?`min="${min}"`:''}></label>`;
+const area=(n,l,v='',required=false)=>`<label>${l}${required?'<span class="required-mark" aria-hidden="true"> *</span>':''}<textarea name="${n}" rows="4" ${required?'required':''}>${esc(v)}</textarea></label>`;
+function bindSubmit(form,action,busyText='Menyimpan...'){form.onsubmit=async e=>{e.preventDefault();if(form.dataset.busy==='true')return;form.dataset.busy='true';const button=form.querySelector('button[type=submit],button:not([type])'),label=button?.textContent;if(button){button.disabled=true;button.setAttribute('aria-busy','true');button.textContent=busyText}try{await action(e)}catch(error){if(!error?.uiNotified)toast(error?.message||'Tindakan gagal. Periksa data dan coba lagi.')}finally{form.dataset.busy='false';if(button){button.disabled=form.dataset.saved==='true';button.removeAttribute('aria-busy');button.textContent=form.dataset.saved==='true'?'Draft Tersimpan':label}}}};
+const sel=(n,l,o,required=false,value='')=>`<label>${l}${required?'<span class="required-mark" aria-hidden="true"> *</span>':''}<select name="${n}" ${required?'required':''}>${o.map(x=>{const [v,t]=Array.isArray(x)?x:[x,x];return `<option value="${esc(v)}" ${String(v)===String(value)?'selected':''}>${esc(t)}</option>`}).join('')}</select></label>`;
+const badge=s=>`<span class="b ${s}">${s}</span>`;
+let genericTableSequence=0;
+const genericFilterHeader=(id,index,label)=>`<div class=dashboard-th-content><span>${esc(label)}</span><button type=button class=dashboard-th-filter data-generic-filter="${index}" data-generic-table="${id}" aria-label="Filter ${esc(label)}" aria-haspopup=dialog aria-pressed=false title="Filter ${esc(label)}"><span class=ms aria-hidden=true>filter_list</span></button></div>`;
+function table(cols,rows,act){
+ const count=cols.length+(act?1:0),id=`generic-table-${++genericTableSequence}`;
+ if(cols.some(column=>column[3]))return `<div class=table-wrap tabindex=0 role=region aria-label="Tabel data; gunakan Shift dan roda mouse atau tombol panah untuk menggulir"><table><thead><tr>${cols.map(c=>`<th scope=col>${c[3]?c[3]():c[1]}</th>`).join('')}${act?'<th scope=col>Aksi</th>':''}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr class="${r.flag?'warn':''}">${cols.map(c=>`<td>${c[2]?c[2](r):esc(r[c[0]])}</td>`).join('')}${act?`<td>${act(r)}</td>`:''}</tr>`).join(''):`<tr><td colspan="${count}">Belum ada data</td></tr>`}</tbody></table></div>`;
+ return `<div class=generic-table-toolbar data-generic-toolbar="${id}" hidden><span data-generic-filter-count aria-live=polite></span><button class="btn2 dashboard-filter-reset" type=button data-generic-filter-reset="${id}" hidden>Hapus semua filter kolom</button></div><div class="table-wrap data-table-wrap" tabindex=0 role=region aria-label="Tabel data; gunakan Shift dan roda mouse atau tombol panah untuk menggulir"><table id="${id}"><thead><tr>${cols.map((column,index)=>`<th scope=col>${genericFilterHeader(id,index,column[1])}</th>`).join('')}${act?'<th scope=col>Aksi</th>':''}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr class="${r.flag?'warn':''}">${cols.map(c=>`<td>${c[2]?c[2](r):esc(r[c[0]])}</td>`).join('')}${act?`<td>${act(r)}</td>`:''}</tr>`).join(''):`<tr data-generic-empty=true><td colspan="${count}">Belum ada data</td></tr>`}</tbody></table><div popover=auto class=dashboard-filter-menu data-generic-filter-menu="${id}" role=dialog aria-label="Filter kolom"></div></div>`;
+}
+const genericTableStates=new WeakMap();
+const genericRows=tableElement=>[...tableElement.tBodies[0].rows].filter(row=>!row.hasAttribute('data-generic-empty'));
+const genericCellValue=(row,index)=>String(row.cells[index]?.textContent||'').trim();
+const genericFilterValues=(tableElement,index)=>[...new Set(genericRows(tableElement).map(row=>genericCellValue(row,index)))].sort((a,b)=>a.localeCompare(b,'id',{numeric:true,sensitivity:'base'}));
+function applyGenericTableFilters(tableElement){
+ const state=genericTableStates.get(tableElement);if(!state)return;
+ const rows=genericRows(tableElement),body=tableElement.tBodies[0],emptyRow=body.querySelector('[data-generic-empty]');
+ if(state.sort){rows.sort((a,b)=>genericCellValue(a,state.sort.index).localeCompare(genericCellValue(b,state.sort.index),'id',{numeric:true,sensitivity:'base'})*state.sort.direction);rows.forEach(row=>body.append(row))}
+ rows.forEach(row=>{row.hidden=[...state.filters].some(([index,values])=>!values.has(genericCellValue(row,index)))});
+ const visible=rows.some(row=>!row.hidden);
+ if(!visible&&rows.length&&!emptyRow){const empty=body.insertRow();empty.dataset.genericEmpty='true';const cell=empty.insertCell();cell.colSpan=tableElement.rows[0].cells.length;cell.textContent='Tidak ada data sesuai filter.'}
+ if(visible&&emptyRow)emptyRow.remove();
+ tableElement.querySelectorAll('[data-generic-filter]').forEach(button=>{const active=state.filters.has(Number(button.dataset.genericFilter));button.classList.toggle('has-filter',active);button.setAttribute('aria-pressed',String(active))});
+ const toolbar=document.querySelector(`[data-generic-toolbar="${tableElement.id}"]`),reset=toolbar?.querySelector('[data-generic-filter-reset]'),count=state.filters.size;
+ if(toolbar){toolbar.hidden=count===0&&!state.sort;toolbar.querySelector('[data-generic-filter-count]').textContent=count?`${count} filter kolom aktif${state.sort?' · tabel diurutkan':''}`:state.sort?'Tabel diurutkan':'';if(reset)reset.hidden=count===0&&!state.sort}
+}
+function openGenericTableFilter(button){
+ const tableElement=document.getElementById(button.dataset.genericTable),menu=tableElement?.parentElement.querySelector('[data-generic-filter-menu]');
+ if(!tableElement||!menu)return;
+ let state=genericTableStates.get(tableElement);if(!state){state={filters:new Map(),sort:null};genericTableStates.set(tableElement,state)}
+ const index=Number(button.dataset.genericFilter),header=tableElement.tHead.rows[0].cells[index],label=header.querySelector('.dashboard-th-content>span')?.textContent||header.textContent.replace(/\s+/g,' ').trim(),values=genericFilterValues(tableElement,index),current=state.filters.get(index),chosen=current||new Set(values);
+ menu.dataset.column=String(index);
+ const options=values.map(value=>`<label class=dashboard-filter-option><input type=checkbox value="${esc(value)}" ${chosen.has(value)?'checked':''}><span title="${esc(value)}">${esc(value||'(boş)')}</span></label>`).join('');
+ menu.innerHTML=`<h3>${esc(label)}</h3><div class=dashboard-filter-menu-actions><button type=button class=btn2 data-generic-filter-action=sort-asc>A ke Z / kecil ke besar</button><button type=button class=btn2 data-generic-filter-action=sort-desc>Z ke A / besar ke kecil</button></div><input class=dashboard-filter-search type=search placeholder="Cari nilai..." aria-label="Cari nilai ${esc(label)}"><label class=dashboard-filter-select-all><input type=checkbox data-generic-select-all ${chosen.size===values.length?'checked':''}><span>Pilih semua</span></label><div class=dashboard-filter-options>${options||'<span class=dashboard-empty>Tidak ada nilai</span>'}</div><div class=dashboard-filter-menu-footer><button type=button class=btn2 data-generic-filter-action=clear-column>Hapus filter</button><button type=button class=dashboard-filter-apply data-generic-filter-action=apply>Gunakan filter</button></div>`;
+ if(!menu.matches(':popover-open'))menu.showPopover();
+ const rect=button.getBoundingClientRect(),width=290,height=menu.offsetHeight,left=Math.max(8,Math.min(rect.right-width,innerWidth-width-8)),top=rect.bottom+6+height>innerHeight?Math.max(8,rect.top-height-6):rect.bottom+6;
+ menu.style.left=`${left}px`;menu.style.top=`${top}px`;menu.querySelector('.dashboard-filter-search').focus();
+}
+document.addEventListener('click',event=>{
+ if(!(event.target instanceof Element))return;
+ const trigger=event.target.closest('[data-generic-filter]');
+ if(trigger){event.preventDefault();openGenericTableFilter(trigger);return}
+ const reset=event.target.closest('[data-generic-filter-reset]');
+ if(reset){const tableElement=document.getElementById(reset.dataset.genericFilterReset),state=tableElement&&genericTableStates.get(tableElement);if(state){state.filters.clear();state.sort=null;applyGenericTableFilters(tableElement)}return}
+ const action=event.target.closest('[data-generic-filter-action]'),menu=action?.closest('[data-generic-filter-menu]');
+ if(!action||!menu)return;
+ const tableElement=document.getElementById(menu.dataset.genericFilterMenu),state=tableElement&&genericTableStates.get(tableElement),index=Number(menu.dataset.column);
+ if(!tableElement||!state)return;
+ if(action.dataset.genericFilterAction==='sort-asc'||action.dataset.genericFilterAction==='sort-desc'){state.sort={index,direction:action.dataset.genericFilterAction==='sort-asc'?1:-1};menu.hidePopover();applyGenericTableFilters(tableElement);return}
+ if(action.dataset.genericFilterAction==='clear-column'){state.filters.delete(index);menu.hidePopover();applyGenericTableFilters(tableElement);return}
+ if(action.dataset.genericFilterAction==='apply'){
+  const values=genericFilterValues(tableElement,index),checked=[...menu.querySelectorAll('.dashboard-filter-option input:checked')].map(input=>input.value);
+  if(checked.length===values.length)state.filters.delete(index);else state.filters.set(index,new Set(checked));
+  menu.hidePopover();applyGenericTableFilters(tableElement);
+ }
+});
+document.addEventListener('input',event=>{
+ const input=event.target;if(!(input instanceof HTMLInputElement)||!input.matches('.dashboard-filter-search'))return;
+ const menu=input.closest('[data-generic-filter-menu]');if(!menu)return;
+ const query=input.value.trim().toLocaleLowerCase('id');
+ menu.querySelectorAll('.dashboard-filter-option').forEach(option=>{option.hidden=!option.textContent.toLocaleLowerCase('id').includes(query)});
+ const visible=[...menu.querySelectorAll('.dashboard-filter-option:not([hidden]) input')];
+ menu.querySelector('[data-generic-select-all]').checked=visible.length>0&&visible.every(item=>item.checked);
+});
+document.addEventListener('change',event=>{
+ if(!(event.target instanceof HTMLInputElement))return;
+ const menu=event.target.closest('[data-generic-filter-menu]');if(!menu)return;
+ if(event.target.matches('[data-generic-select-all]'))menu.querySelectorAll('.dashboard-filter-option:not([hidden]) input').forEach(input=>input.checked=event.target.checked);
+ if(event.target.matches('.dashboard-filter-option input')){const visible=[...menu.querySelectorAll('.dashboard-filter-option:not([hidden]) input')];menu.querySelector('[data-generic-select-all]').checked=visible.length>0&&visible.every(input=>input.checked)}
+});
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const idDate=value=>{const match=String(value??'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!match)return value||'Belum diatur';return new Date(Number(match[1]),Number(match[2])-1,Number(match[3])).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})};
+const tripDuration=(start,end)=>{const parse=value=>{const match=String(value??'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!match)return null;const time=Date.UTC(Number(match[1]),Number(match[2])-1,Number(match[3]));return new Date(time).toISOString().slice(0,10)===value?time:null};const from=parse(start),to=parse(end);if(from===null||to===null||to<from)return null;return Math.floor((to-from)/86400000)+1};
+const formatWib=value=>{if(!value)return '-';const date=new Date(value);return Number.isNaN(date.valueOf())?esc(value):new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Jakarta',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(date)};
+function costBreakdown(rows,stId,canDelete){
+ const sum=key=>rows.reduce((total,row)=>total+BigInt(row[key]??0),0n);
+ const amount=value=>`<strong class=cost-amount>${rp(value)}</strong>`;
+ const line=(label,value)=>`<dt>${label}</dt><dd>${value}</dd>`;
+ const rowHtml=row=>{
+  const days=Number(row.hari)||0,nights=Number(row.malam)||0,dayRate=Number(row.tarif_harian)||0,nightRate=Number(row.tarif_inap)||0,repRate=Number(row.tarif_rep)||0;
+  const notes=[row.flag?`Tarif tagihan penginapan ${rp(nightRate)} per malam melebihi batas SBM ${rp(row.batas)}. Pembayaran dibatasi maksimal ${rp(row.batas)} per malam.`:'',row.biaya_riil!=null?`Pengeluaran riil tanpa bukti (${rp(row.biaya_riil)}) dicatat terpisah dan tidak menambah total.`:''].filter(Boolean);
+  return `<tr class="${row.flag?'warn':''}">
+   <td><strong class=cost-person>${esc(row.nama)}</strong><small>${esc(row.jabatan||'Belum diisi')} · ${esc(row.eselon||'-')} / ${esc(row.golongan||'-')}</small></td>
+   <td class=cost-count>${days}</td><td class=cost-count>${nights}</td><td class=cost-grand-total>${amount(row.jumlah)}</td>
+   <td><button class=cost-details-trigger type=button onclick="this.nextElementSibling.showModal()" aria-haspopup=dialog aria-controls="cost-dialog-${row.id}">Rincian</button><dialog class=cost-dialog id="cost-dialog-${row.id}" aria-label="Rincian biaya ${esc(row.nama)}" onclick="if(event.target===this)this.close()" onkeydown="if(event.key==='Escape'){event.preventDefault();this.close()}"><div class=cost-details-content><div class=cost-dialog-header><h4>Perhitungan · ${esc(row.nama)}</h4><button class=cost-dialog-close type=button aria-label="Tutup rincian" onclick="this.closest('dialog').close()">×</button></div><dl>
+   ${line('Uang harian',`${days} hari × ${rp(dayRate)} = ${rp(row.uang_harian)}`)}
+   ${line('Penginapan',`${nights} malam × ${rp(Math.min(nightRate,Number(row.batas)||0))} (batas bayar; tagihan aktual ${rp(nightRate)}) = ${rp(row.uang_inap)}`)}
+   ${line('Transportasi / tiket',rp(row.tiket))}${line('Taksi',rp(row.taksi))}
+   ${line('Representasi',`${days} hari × ${rp(repRate)} = ${rp(row.rep)}`)}
+   ${line('Biaya lain',rp(row.lain))}${row.ppn!=null?line('PPN aktual (di luar total)',rp(row.ppn)):''}
+   ${row.pph!=null?line('PPh aktual (di luar total)',rp(row.pph)):''}
+   ${line('Total biaya perjalanan',rp(row.jumlah))}
+   </dl>${notes.map(note=>`<p class=cost-details-note>${esc(note)}</p>`).join('')}</div></dialog></td>
+   <td>${canDelete?`<button class="btn2" type=button onclick="rm(${stId},${row.id},routeVersion,event)" aria-label="Hapus pelaksana ${esc(row.nama)}">Hapus</button>`:'-'}</td>
+  </tr>`
+ };
+ const tableId=`generic-table-${++genericTableSequence}`,filterColumns=['Pelaksana','Hari','Malam','Total biaya'];
+ return `<div class=generic-table-toolbar data-generic-toolbar="${tableId}" hidden><span data-generic-filter-count aria-live=polite></span><button class="btn2 dashboard-filter-reset" type=button data-generic-filter-reset="${tableId}" hidden>Hapus semua filter kolom</button></div><div class="cost-table-wrap data-table-wrap" tabindex=0 role=region aria-label="Ringkasan biaya pelaksana; buka Rincian untuk melihat komponen biaya"><table class="cost-table" id="${tableId}">
+ <thead><tr>${filterColumns.map((label,index)=>`<th scope=col>${genericFilterHeader(tableId,index,label)}</th>`).join('')}<th scope=col>Rincian biaya</th><th scope=col>Aksi</th></tr></thead>
+ <tbody>${rows.length?rows.map(rowHtml).join(''):'<tr><td colspan=6>Belum ada pelaksana.</td></tr>'}</tbody>
+ ${rows.length?`<tfoot><tr><th scope=row colspan=3>Total seluruh pelaksana</th><td class=cost-grand-total>${rp(sum('jumlah'))}</td><td colspan=2></td></tr></tfoot>`:''}
+ </table><div popover=auto class=dashboard-filter-menu data-generic-filter-menu="${tableId}" role=dialog aria-label="Filter kolom"></div></div><div class=cost-total-bar><span>Total biaya perjalanan · ${rows.length} pelaksana</span><strong>${rp(sum('jumlah'))}</strong></div>`
+}
+const PDF_TYPES=[['st','Surat Tugas'],['st_lampiran','Lampiran ST'],['spd','Surat Perjalanan Dinas'],['rincian','Rincian biaya'],['kuitansi','Kuitansi'],['nominatif','Daftar nominatif'],['sptjb','SPTJB'],['laporan','Laporan perjalanan'],['riil','Pengeluaran riil'],['lengkap','Paket lengkap']];
+let pdfPreviewUrl=null;
+const showPdfSelectionError=message=>{const target=$('#pdf-selection-error');if(target){target.textContent=message;target.hidden=false}};
+window.openPdfSelection=(event,button)=>{event.preventDefault();const card=button.closest('[data-st-id]'),dialog=$('#pdf-selection-dialog');if(!card||!dialog)return;dialog.dataset.stId=card.dataset.stId;dialog.dataset.stTitle=card.querySelector('.pdf-card-info h3').textContent;$('#pdf-selection-title').textContent=`Unduh/Cetak Dokumen · ${dialog.dataset.stTitle}`;const checks=[...dialog.querySelectorAll('input[name=pdf-type]')];checks.forEach(input=>input.checked=false);const all=dialog.querySelector('[data-select-all]');all.checked=false;all.indeterminate=false;dialog.querySelector('input[name=pdf-format][value=pdf]').checked=true;const error=$('#pdf-selection-error');error.textContent='';error.hidden=true;dialog.querySelector('.pdf-selection-submit').textContent='Unduh/Cetak Dokumen';dialog.showModal()};
+window.preparePdfSelection=async(event,button)=>{event.preventDefault();if(button.dataset.busy==='true')return;const selectionDialog=$('#pdf-selection-dialog'),stId=selectionDialog?.dataset.stId,types=[...selectionDialog.querySelectorAll('input[name=pdf-type]:checked')].map(input=>input.value),format=selectionDialog?.querySelector('input[name=pdf-format]:checked')?.value;if(!types.length){showPdfSelectionError('Pilih setidaknya satu jenis dokumen.');return}if(!stId||!format){showPdfSelectionError('Pilihan Surat Tugas atau format unduhan tidak valid. Tutup pop-up dan coba lagi.');return}const error=$('#pdf-selection-error');error.textContent='';error.hidden=true;button.dataset.busy='true';button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='Menyiapkan dokumen...';try{const response=await fetch(`/api/v1/st/${encodeURIComponent(stId)}/pdf/pilihan`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+TOK},body:JSON.stringify({jenis:types,format})});if(!response.ok){let message=`Gagal membuat dokumen (Error ${response.status})`;try{const body=await response.json(),detail=body?.error||body?.detail?.error;if(detail?.message)message=`${detail.code?detail.code+': ':''}${detail.message}`}catch{}showPdfSelectionError(message);return}const blob=await response.blob();if(!blob.size)throw new Error('Server mengembalikan berkas kosong');if(pdfPreviewUrl)URL.revokeObjectURL(pdfPreviewUrl);pdfPreviewUrl=URL.createObjectURL(blob);const dialog=$('#pdf-preview-dialog'),documents=types.map(type=>{const item=PDF_TYPES.find(entry=>entry[0]===type);return {label:item?.[1]||type,filename:`pejadin_${stId}_${type}.pdf`}});$('#pdf-preview-title').textContent=`${format==='zip'?'Paket ZIP':'PDF gabungan'} · ${selectionDialog.dataset.stTitle}`;const frame=$('#pdf-preview-frame'),archivePreview=$('#pdf-archive-preview');if(format==='zip'){frame.hidden=true;archivePreview.hidden=false;archivePreview.innerHTML=`<h4>Dokumen dalam ZIP</h4><p>${documents.length} berkas PDF akan dimasukkan ke arsip.</p><ul>${documents.map(doc=>`<li><strong>${esc(doc.label)}</strong> — ${esc(doc.filename)}</li>`).join('')}</ul>`}else{archivePreview.hidden=true;frame.hidden=false;frame.src=pdfPreviewUrl}const download=$('#pdf-preview-download');download.href=pdfPreviewUrl;download.download=`pejadin_${stId}_dokumen.${format==='zip'?'zip':'pdf'}`;download.textContent=format==='zip'?'Unduh ZIP':'Unduh PDF';selectionDialog.close();dialog.showModal()}catch(error){showPdfSelectionError(error?.message||'Gagal menyiapkan dokumen. Periksa koneksi lalu coba lagi.')}finally{button.dataset.busy='false';button.disabled=false;button.removeAttribute('aria-busy');button.textContent='Unduh/Cetak Dokumen'}};
+R.dash=async(version)=>{
+ const initialQuery=pendingSTSearch||$('#global-search')?.value.trim()||'';
+ pendingSTSearch='';if($('#global-search'))$('#global-search').value=initialQuery;
+ $('#m').innerHTML=`<section aria-labelledby=dashboard-title><div class=dashboard-heading><div class=dashboard-title-row><h2 id=dashboard-title>Monitoring Surat Tugas</h2>${U.role=='OPERATOR'?`<a class="btn dashboard-create-button" href="#buat">+ Buat Surat Tugas</a>`:''}</div><div class=dashboard-tools><input id=q aria-label="Cari Surat Tugas" placeholder="Cari nomor, maksud, tujuan..." value="${esc(initialQuery)}"><select id=st aria-label="Filter berdasarkan status"><option value="">Semua status</option>${['DRAFT','DIAJUKAN','TERBIT','SELESAI','DIBATALKAN'].map(x=>`<option>${x}</option>`).join('')}</select>
+ ${['OPERATOR','PPK','BENDAHARA','ADMIN'].includes(U.role)?`<select id=report-year aria-label="Tahun laporan"><option value="0">Semua tahun</option></select><select id=dl aria-label="Unduh laporan"><option value="">Unduh Laporan</option><option value=xlsx>Excel (.xlsx)</option><option value=pdf>Unduh PDF</option></select>`:''}</div></div>
+ <div class=scorecards id=scorecards aria-label="Ringkasan jumlah Surat Tugas" aria-busy=true><button class=scorecard type=button data-status="" aria-pressed=true disabled><span class="scorecard-icon ms" aria-hidden=true>description</span><span class=scorecard-copy><span class=scorecard-label>Total Surat Tugas</span><span class=scorecard-value data-count=total>—</span></span></button><button class=scorecard type=button data-status=DRAFT aria-pressed=false disabled><span class="scorecard-icon ms" aria-hidden=true>edit_document</span><span class=scorecard-copy><span class=scorecard-label>Draft</span><span class=scorecard-value data-count=DRAFT>—</span></span></button><button class=scorecard type=button data-status=DIAJUKAN aria-pressed=false disabled><span class="scorecard-icon ms" aria-hidden=true>pending_actions</span><span class=scorecard-copy><span class=scorecard-label>Menunggu Proses</span><span class=scorecard-value data-count=DIAJUKAN>—</span></span></button><button class=scorecard type=button data-status=TERBIT aria-pressed=false disabled><span class="scorecard-icon ms" aria-hidden=true>task_alt</span><span class=scorecard-copy><span class=scorecard-label>Terbit</span><span class=scorecard-value data-count=TERBIT>—</span></span></button></div><div class="scorecard scorecard-static scorecard-cost" aria-label="Total biaya untuk Surat Tugas berstatus Terbit dan Selesai"><span class="scorecard-icon ms" aria-hidden=true>payments</span><span class=scorecard-copy><span class=scorecard-label>Total Biaya</span><span class=scorecard-value data-count=cost>—</span><span class=scorecard-note>Surat Terbit + Selesai</span></span></div><div class="card dashboard-table" id=t><div class=dashboard-load-state id=dashboard-state role=status aria-live=polite>Memuat daftar Surat Tugas...</div></div></section>`;
+ let querySeq=0,allRows=[],columnFilters={},sortState=null,createdAtRange=null,dashboardTableReady=false,searchTimer=null;
+ const assignedStaff=row=>{const count=Number(row.jml)||0;return count?`${count} pegawai`:'Belum ditambahkan'};
+ const mobileList=rows=>rows.length?`<div class=dashboard-mobile-list>${rows.map(r=>{const days=tripDuration(r.tgl_berangkat,r.tgl_kembali);return `<article class=dashboard-mobile-card><div class=dashboard-mobile-head><strong class=dashboard-mobile-number>${esc(r.nomor||'Nomor belum tersedia')}</strong>${badge(r.status||'')}</div><div class=dashboard-mobile-facts><div class="dashboard-mobile-fact full"><span class=dashboard-mobile-label>Tanggal & Waktu Dibuat (WIB)</span><span class=dashboard-mobile-value>${r.created_at?formatWib(r.created_at):'-'}</span></div><div class=dashboard-mobile-fact><span class=dashboard-mobile-label>Pegawai</span><span class=dashboard-mobile-value>${assignedStaff(r)}</span></div><div class=dashboard-mobile-fact><span class=dashboard-mobile-label>Tujuan</span><span class=dashboard-mobile-value>${esc(r.tujuan||'-')}${r.provinsi?`<span class=dashboard-subtext>${esc(r.provinsi)}</span>`:''}</span></div><div class="dashboard-mobile-fact full"><span class=dashboard-mobile-label>Maksud Perjalanan</span><span class=dashboard-mobile-value>${esc(r.maksud||'-')}</span></div><div class=dashboard-mobile-fact><span class=dashboard-mobile-label>Tanggal Berangkat</span><span class=dashboard-mobile-value>${esc(r.tgl_berangkat?idDate(r.tgl_berangkat):'-')}</span></div><div class=dashboard-mobile-fact><span class=dashboard-mobile-label>Tanggal Kembali</span><span class=dashboard-mobile-value>${esc(r.tgl_kembali?idDate(r.tgl_kembali):'-')}</span></div><div class=dashboard-mobile-fact><span class=dashboard-mobile-label>Durasi</span><span class=dashboard-mobile-value>${days===null?'-':`${days} hari`}</span></div><div class=dashboard-mobile-fact><span class=dashboard-mobile-label>Malam Menginap</span><span class=dashboard-mobile-value>${days===null?'-':`${Math.max(0,days-1)} malam`}</span></div><div class="dashboard-mobile-fact full"><span class=dashboard-mobile-label>Total Biaya</span><strong class=dashboard-mobile-value>${rp(r.total)}</strong></div></div><div class=dashboard-mobile-actions><a class=btn2 href="#detail/${encodeURIComponent(r.id)}">Lihat rincian</a></div></article>`}).join('')}</div>`:'<div class="dashboard-empty dashboard-mobile-list">Belum ada Surat Tugas yang sesuai.</div>';
+ const renderRows=()=>{
+  const selected=$('#st').value;
+  const columns=[['urut','No.'],['dibuat','Tanggal & Waktu Dibuat (WIB)',r=>r.created_at?formatWib(r.created_at):'-',()=>`<div class=dashboard-th-content><span>Tanggal & Waktu Dibuat (WIB)</span>${filterButton('created_at')}</div>`],['nomor','Nomor Surat Tugas',r=>`<span class=dashboard-st-number>${esc(r.nomor||'-')}</span>`,()=>`<div class=dashboard-th-content><span>Nomor Surat Tugas</span>${filterButton('nomor')}</div>`],['pegawai','Pegawai',assignedStaff,()=>`<div class=dashboard-th-content><span>Pegawai</span>${filterButton('jml')}</div>`],['tujuan','Tujuan',r=>`${esc(r.tujuan||'-')}${r.provinsi?`<span class=dashboard-subtext>${esc(r.provinsi)}</span>`:''}`,()=>`<div class=dashboard-th-content><span>Tujuan</span>${filterButton('tujuan')}</div>`],['maksud','Maksud Perjalanan',r=>`<span class=dashboard-purpose title="${esc(r.maksud||'')}">${esc(r.maksud||'-')}</span>`,()=>`<div class=dashboard-th-content><span>Maksud Perjalanan</span>${filterButton('maksud')}</div>`],['berangkat','Tanggal Berangkat',r=>esc(r.tgl_berangkat?idDate(r.tgl_berangkat):'-'),()=>`<div class=dashboard-th-content><span>Tanggal Berangkat</span>${filterButton('tgl_berangkat')}</div>`],['kembali','Tanggal Kembali',r=>esc(r.tgl_kembali?idDate(r.tgl_kembali):'-'),()=>`<div class=dashboard-th-content><span>Tanggal Kembali</span>${filterButton('tgl_kembali')}</div>`],['hari','Hari',r=>{const days=tripDuration(r.tgl_berangkat,r.tgl_kembali);return days===null?'-':`${days} hari`},()=>`<div class=dashboard-th-content><span>Hari</span>${filterButton('hari')}</div>`],['malam','Malam Menginap',r=>{const days=tripDuration(r.tgl_berangkat,r.tgl_kembali);return days===null?'-':`${Math.max(0,days-1)} malam`},()=>`<div class=dashboard-th-content><span>Malam Menginap</span>${filterButton('malam')}</div>`],['total','Total Biaya',r=>`<strong>${rp(r.total)}</strong>`,()=>`<div class=dashboard-th-content><span>Total Biaya</span>${filterButton('total')}</div>`],['status','Status',r=>badge(r.status||''),()=>`<div class=dashboard-th-content><span>Status</span>${filterButton('status')}</div>`]];
+  const duration=row=>tripDuration(row.tgl_berangkat,row.tgl_kembali);
+  const filters=[
+   {key:'nomor',label:'Nomor Surat Tugas',value:row=>String(row.nomor||'-')},
+   {key:'created_at',label:'Tanggal & Waktu Dibuat (WIB)',value:row=>String(row.created_at||'-'),display:row=>row.created_at?formatWib(row.created_at):'-'},
+   {key:'jml',label:'Pegawai',value:row=>assignedStaff(row)},
+   {key:'tujuan',label:'Tujuan',value:row=>`${row.tujuan||'-'}${row.provinsi?` — ${row.provinsi}`:''}`},
+   {key:'maksud',label:'Maksud Perjalanan',value:row=>String(row.maksud||'-')},
+   {key:'tgl_berangkat',label:'Tanggal Berangkat',value:row=>String(row.tgl_berangkat||'-'),display:row=>row.tgl_berangkat?idDate(row.tgl_berangkat):'-'},
+   {key:'tgl_kembali',label:'Tanggal Kembali',value:row=>String(row.tgl_kembali||'-'),display:row=>row.tgl_kembali?idDate(row.tgl_kembali):'-'},
+   {key:'hari',label:'Hari',value:row=>duration(row)===null?'-':String(duration(row)),display:row=>duration(row)===null?'-':`${duration(row)} hari`},
+   {key:'malam',label:'Malam Menginap',value:row=>duration(row)===null?'-':String(Math.max(0,duration(row)-1)),display:row=>duration(row)===null?'-':`${Math.max(0,duration(row)-1)} malam`},
+   {key:'total',label:'Total Biaya',value:row=>String(row.total??0),display:row=>rp(row.total)},
+   {key:'status',label:'Status',value:row=>String(row.status||'-')}
+  ];
+  const filterFor=key=>filters.find(filter=>filter.key===key);
+  const filterActive=key=>Boolean(columnFilters[key]||(key==='created_at'&&createdAtRange));
+  const filterButton=key=>{const filter=filterFor(key);if(!filter)return'';const active=filterActive(key);return `<button type=button class="dashboard-th-filter ${active?'has-filter':''}" data-filter-column="${key}" aria-label="Filter ${filter.label}" aria-haspopup=dialog aria-pressed="${active}" title="Filter ${filter.label}"><span class=ms aria-hidden=true>filter_list</span></button>`};
+  const filterValue=(row,filter)=>filter.value(row);
+  const menuValues=filter=>{const values=new Map();allRows.forEach(row=>{const value=filterValue(row,filter);if(!values.has(value))values.set(value,filter.display?filter.display(row):value)});return [...values].sort((a,b)=>a[1].localeCompare(b[1],'id',{numeric:true,sensitivity:'base'}))};
+  const createdAtLocalDate=row=>{if(!row.created_at)return'';const date=new Date(row.created_at);if(Number.isNaN(date.valueOf()))return'';const parts=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date).map(part=>[part.type,part.value]));return `${parts.year}-${parts.month}-${parts.day}`};
+  const matches=row=>filters.every(filter=>filter.key==='created_at'&&createdAtRange?(!createdAtRange.from||createdAtLocalDate(row)>=createdAtRange.from)&&(!createdAtRange.to||createdAtLocalDate(row)<=createdAtRange.to):!columnFilters[filter.key]||columnFilters[filter.key].includes(filterValue(row,filter)));
+  const rows=allRows.filter(row=>(!selected||row.status===selected)&&matches(row));
+  document.querySelectorAll('button.scorecard').forEach(card=>card.setAttribute('aria-pressed',String(card.dataset.status===selected)));
+  const action=row=>`<a class=btn2 href="#detail/${encodeURIComponent(row.id)}">Lihat rincian</a>`;
+  const popoverMarkup=`<div id=dashboard-filter-menu popover=auto class=dashboard-filter-menu role=dialog aria-label="Filter kolom"></div>`;
+  const mobileButtons=`<div class=dashboard-mobile-filter-menu aria-label="Filter per kolom">${filters.map(filter=>`<button type=button data-filter-column="${filter.key}" aria-pressed="${filterActive(filter.key)}" class="${filterActive(filter.key)?'has-filter':''}">${esc(filter.label)}${filterActive(filter.key)?' •':''}</button>`).join('')}</div>`;
+  if(!dashboardTableReady){
+   $('#t').innerHTML=`<div class=dashboard-load-state id=dashboard-state role=status aria-live=polite>Memuat daftar Surat Tugas...</div><div class=dashboard-filter-toolbar><span data-filter-results aria-live=polite></span><button class="btn2 dashboard-filter-reset" type=button>Hapus semua filter kolom</button></div>${mobileButtons}${table(columns,[],action)}${mobileList([])}${popoverMarkup}`;
+   dashboardTableReady=true;
+   const menu=$('#dashboard-filter-menu');
+   const openFilterMenu=(key,anchor)=>{
+    const filter=filterFor(key);if(!filter)return;
+    const values=menuValues(filter),current=columnFilters[key],chosen=current?new Set(current):new Set(values.map(([value])=>value));
+    const options=values.map(([value,label])=>`<label class=dashboard-filter-option data-filter-option><input type=checkbox value="${esc(value)}" ${chosen.has(value)?'checked':''}><span title="${esc(label)}">${esc(label)}</span></label>`).join('');
+    menu.dataset.column=key;
+    const dateRangeMarkup=key==='created_at'?`<p class=muted>Batasi berdasarkan tanggal pembuatan (WIB).</p><div class=dashboard-date-range><label>Dari<input type=date data-created-from value="${esc(createdAtRange?.from||'')}"></label><label>Sampai<input type=date data-created-to value="${esc(createdAtRange?.to||'')}"></label></div>`:'';
+    const listMarkup=key==='created_at'?'':`<input class=dashboard-filter-search type=search placeholder="Cari nilai..." aria-label="Cari nilai ${esc(filter.label)}"><label class=dashboard-filter-select-all><input type=checkbox data-select-all ${chosen.size===values.length?'checked':''}><span>Pilih semua</span></label><div class=dashboard-filter-options>${options||'<span class=dashboard-empty>Tidak ada nilai</span>'}</div>`;
+    menu.innerHTML=`<h3>${esc(filter.label)}</h3><div class=dashboard-filter-menu-actions><button type=button class=btn2 data-filter-action=sort-asc>A ke Z / kecil ke besar</button><button type=button class=btn2 data-filter-action=sort-desc>Z ke A / besar ke kecil</button></div>${dateRangeMarkup}${listMarkup}<div class=dashboard-filter-menu-footer><button type=button class=btn2 data-filter-action=clear-column>Hapus filter</button><button type=button class=dashboard-filter-apply data-filter-action=apply>Gunakan filter</button></div>`;
+    if(!menu.matches(':popover-open'))menu.showPopover();
+    const rect=anchor.getBoundingClientRect(),width=290,height=menu.offsetHeight,left=Math.max(8,Math.min(rect.right-width,innerWidth-width-8)),top=rect.bottom+6+height>innerHeight?Math.max(8,rect.top-height-6):rect.bottom+6;
+    menu.style.left=`${left}px`;menu.style.top=`${top}px`;
+    menu.querySelector('.dashboard-filter-search').focus();
+   };
+   $('#t').addEventListener('click',event=>{
+    if(!(event.target instanceof Element))return;
+    if(event.target.closest('.dashboard-retry')){L().catch(()=>{});return}
+    const trigger=event.target.closest('[data-filter-column]');
+    if(trigger){event.preventDefault();openFilterMenu(trigger.dataset.filterColumn,trigger);return}
+    const actionButton=event.target.closest('[data-filter-action]');
+    if(actionButton){
+     const key=menu.dataset.column,filter=filterFor(key);
+     if(actionButton.dataset.filterAction==='sort-asc'||actionButton.dataset.filterAction==='sort-desc'){sortState={key,direction:actionButton.dataset.filterAction==='sort-asc'?1:-1};menu.hidePopover();renderRows();return}
+     if(actionButton.dataset.filterAction==='clear-column'){delete columnFilters[key];if(key==='created_at')createdAtRange=null;menu.hidePopover();renderRows();return}
+     if(actionButton.dataset.filterAction==='apply'&&filter){
+      if(key==='created_at'){
+       const from=menu.querySelector('[data-created-from]').value,to=menu.querySelector('[data-created-to]').value;
+       if(from&&to&&from>to){toast('Tanggal awal tidak boleh setelah tanggal akhir.');return}
+       createdAtRange=from||to?{from,to}:null;
+       delete columnFilters.created_at;
+      }else{
+       const values=menuValues(filter).map(([value])=>value),checked=[...menu.querySelectorAll('.dashboard-filter-option input:checked')].map(input=>input.value);
+       if(checked.length===values.length)delete columnFilters[key];else columnFilters[key]=checked;
+      }
+      menu.hidePopover();renderRows();return;
+     }
+     if(actionButton.closest('.dashboard-filter-reset')){columnFilters={};createdAtRange=null;sortState=null;renderRows();return}
+    }
+   });
+   $('#t').addEventListener('input',event=>{
+    if(!(event.target instanceof HTMLInputElement)||!event.target.matches('.dashboard-filter-search'))return;
+    const query=event.target.value.trim().toLocaleLowerCase('id');
+    menu.querySelectorAll('.dashboard-filter-option').forEach(option=>{option.hidden=!option.textContent.toLocaleLowerCase('id').includes(query)});
+    const visible=[...menu.querySelectorAll('.dashboard-filter-option:not([hidden]) input')];
+    menu.querySelector('[data-select-all]').checked=visible.length>0&&visible.every(input=>input.checked);
+   });
+   $('#t').addEventListener('change',event=>{
+    if(!(event.target instanceof HTMLInputElement))return;
+    if(event.target.matches('[data-select-all]'))menu.querySelectorAll('.dashboard-filter-option:not([hidden]) input').forEach(input=>input.checked=event.target.checked);
+    if(event.target.closest('.dashboard-filter-option')){const visible=[...menu.querySelectorAll('.dashboard-filter-option:not([hidden]) input')];menu.querySelector('[data-select-all]').checked=visible.length>0&&visible.every(input=>input.checked)}
+   });
+   addEventListener('resize',()=>{if(menu.matches(':popover-open'))menu.hidePopover()},{once:true});
+   document.querySelector('#t .dashboard-filter-reset').addEventListener('click',()=>{columnFilters={};createdAtRange=null;sortState=null;renderRows()});
+  }
+  document.querySelectorAll('.dashboard-th-filter,.dashboard-mobile-filter-menu [data-filter-column]').forEach(button=>{const active=filterActive(button.dataset.filterColumn);button.classList.toggle('has-filter',active);button.setAttribute('aria-pressed',String(active))});
+  if(sortState){const sortFilter=filterFor(sortState.key);if(sortFilter)rows.sort((a,b)=>sortFilter.value(a).localeCompare(sortFilter.value(b),'id',{numeric:true,sensitivity:'base'})*sortState.direction)}
+  const indexed=rows.map((row,index)=>({...row,urut:index+1}));
+  const body=$('#t tbody'),count=columns.length+1;
+  body.innerHTML=indexed.length?indexed.map(row=>`<tr class="${row.flag?'warn':''}">${columns.map(column=>`<td>${column[2]?column[2](row):esc(row[column[0]])}</td>`).join('')}<td>${action(row)}</td></tr>`).join(''):`<tr><td colspan="${count}">${allRows.length?'Tidak ada Surat Tugas yang sesuai dengan filter.':'Belum ada Surat Tugas.'}</td></tr>`;
+  body.setAttribute('aria-live','polite');body.setAttribute('aria-busy','false');
+  const activeFilterCount=Object.keys(columnFilters).length+(createdAtRange?1:0);
+  $('#t [data-filter-results]').textContent=`Menampilkan ${rows.length} dari ${allRows.length} Surat Tugas${activeFilterCount?` · ${activeFilterCount} filter kolom aktif`:''}${sortState?` · diurutkan ${sortState.direction===1?'A–Z':'Z–A'}`:''}`;
+  const state=$('#dashboard-state');
+  if(state){state.hidden=true;state.textContent=''}
+  $('#t .dashboard-mobile-list')?.replaceWith(document.createRange().createContextualFragment(mobileList(rows)));
+  document.querySelectorAll('#t .dashboard-mobile-filter-menu [data-filter-column]').forEach(button=>{const active=filterActive(button.dataset.filterColumn);button.classList.toggle('has-filter',active);button.setAttribute('aria-pressed',String(active))});
+ };
+ const L=async()=>{
+  const sequence=++querySeq,cards=[...document.querySelectorAll('button.scorecard')],state=$('#dashboard-state');
+  if(state){state.hidden=false;state.className='dashboard-load-state';state.setAttribute('role','status');state.setAttribute('aria-live','polite');state.textContent='Memuat daftar Surat Tugas...'}
+  $('#t tbody')?.setAttribute('aria-busy','true');$('#scorecards')?.setAttribute('aria-busy','true');cards.forEach(card=>card.disabled=true);
+  try{
+   const result=await api(`/st?cari=${encodeURIComponent($('#q').value)}`);
+   if(version!==routeVersion||sequence!==querySeq||!$('#t'))return;
+   allRows=result;
+   const reportYear=$('#report-year'),selectedYear=reportYear?.value||'0';
+   if(reportYear){const years=[...new Set(result.map(row=>Number(row.tahun)).filter(year=>Number.isInteger(year)&&year>0))];if(Number(selectedYear)>0)years.push(Number(selectedYear));years.sort((a,b)=>b-a);const uniqueYears=[...new Set(years)];reportYear.innerHTML='<option value="0">Semua tahun</option>'+uniqueYears.map(year=>`<option value="${year}">${year}</option>`).join('');reportYear.value=selectedYear}
+   const counts={total:result.length,DRAFT:0,DIAJUKAN:0,TERBIT:0};
+   let issuedCost=0n;
+   result.forEach(row=>{if(Object.prototype.hasOwnProperty.call(counts,row.status))counts[row.status]++;if(['TERBIT','SELESAI'].includes(row.status))issuedCost+=BigInt(row.total||0)});
+   document.querySelectorAll('.scorecard-value').forEach(node=>{node.textContent=node.dataset.count==='cost'?rp(issuedCost):String(counts[node.dataset.count]??0);if(node.dataset.count==='cost')node.title=rp(issuedCost)});
+   renderRows();
+  }catch(error){
+   if(version===routeVersion&&sequence===querySeq){
+    const state=$('#dashboard-state'),body=$('#t tbody');
+    if(body)body.innerHTML='';
+    if(state){state.hidden=false;state.className='dashboard-load-error';state.setAttribute('role','alert');state.setAttribute('aria-live','assertive');state.innerHTML='Daftar Surat Tugas gagal dimuat. <button class="btn2 dashboard-retry" type=button>Coba lagi</button>'}
+   }
+   throw error;
+  }finally{
+   if(sequence===querySeq&&version===routeVersion){$('#scorecards')?.setAttribute('aria-busy','false');cards.forEach(card=>card.disabled=false)}
+  }
+ };
+ $('#q').oninput=()=>{if($('#global-search'))$('#global-search').value=$('#q').value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if(version===routeVersion&&$('#q'))L().catch(error=>{if(!error?.uiNotified)toast('Pencarian gagal dimuat.')})},250)};
+ $('#st').onchange=renderRows;
+ document.querySelectorAll('button.scorecard').forEach(card=>card.onclick=()=>{$('#st').value=card.dataset.status;renderRows()});
+ if($('#dl'))$('#dl').onchange=async e=>{const f=e.target.value;e.target.value='';if(!f)return;const params=new URLSearchParams({format:f==='pdf'?'pdf':'xlsx',status:$('#st').value,tahun:$('#report-year')?.value||'0'});if(f==='pdf'){window.open(`/api/v1/laporan?${params}&token=${encodeURIComponent(TOK)}`,'_blank','noopener');return}try{const r=await fetch(`/api/v1/laporan?${params}`,{headers:{Authorization:'Bearer '+TOK}});if(!r.ok)throw apiError('Gagal mengunduh laporan (Error '+r.status+')');const a=document.createElement('a'),url=URL.createObjectURL(await r.blob());a.href=url;a.download='laporan_rekap_surat_tugas.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(error){if(!error?.uiNotified)toast('Gagal mengunduh laporan. Coba lagi.')}};
+ L().catch(error=>{if(!error?.uiNotified)toast('Daftar Surat Tugas gagal dimuat.')})
+};
+async function formST(version,existing=null){
+ const [pv,S,regionResponse]=await Promise.all([api('/ref/tarif'),api('/ref/satker'),fetch('/data/indonesia-regencies.json')]);if(version!==routeVersion)return;if(!regionResponse.ok)throw new Error('Daftar kota/kabupaten gagal dimuat. Muat ulang halaman atau hubungi administrator.');const regionData=await regionResponse.json();if(!Array.isArray(regionData.regions))throw new Error('Format daftar kota/kabupaten tidak valid.');
+ const editing=Boolean(existing),field=(name,fallback='')=>existing?existing[name]??fallback:fallback,provinces=new Set(pv.map(x=>x.provinsi));if(existing?.provinsi)provinces.add(existing.provinsi);if(existing?.provinsi_asal)provinces.add(existing.provinsi_asal);
+ const provinceOptions=[['','Pilih provinsi'],...Array.from(provinces).sort((a,b)=>a.localeCompare(b,'id'))],provinceAlias=name=>name==='DAERAH ISTIMEWA YOGYAKARTA'?'DI YOGYAKARTA':name.toUpperCase(),citySelect=(name,label)=>`<label>${label}<span class="required-mark" aria-hidden="true"> *</span><select name="${name}_pilihan" required disabled><option value="">Pilih kota/kabupaten</option><option value="__other__">Lainnya (isi manual)</option></select><input name="${name}_lain" type=text placeholder="Ketik nama kota/kabupaten" aria-label="${label} lainnya" hidden></label>`;
+ const normalizeCity=value=>value.trim().toLocaleLowerCase('id').replace(/^(kabupaten administrasi|kabupaten|kota administrasi|kota)\s+/,'');
+ const satkerCity=S.kota_kedudukan||S.kota||'',defaultOriginProvince=S.provinsi_asal||(satkerCity.toLowerCase()==='jakarta'?[...provinces].find(p=>p.toLowerCase()==='dki jakarta')||'':'');
+ const cities=regionData.regions.map(region=>({...region,province:provinceAlias(region.province.toUpperCase())})),cityFields={asal:field('asal',editing?satkerCity:''),tujuan:field('tujuan')},provinceFields={asal:field('provinsi_asal',editing?'':defaultOriginProvince),tujuan:field('provinsi')};
+ const transportOptions=['Pesawat','Kereta Api','Bus','Kendaraan Dinas','Kendaraan Pribadi','Taksi','Kapal/Feri',['Lainnya','Lainnya (isi manual)']],currentTransport=field('alat','Pesawat'),transportChoice=transportOptions.some(option=>(Array.isArray(option)?option[0]:option)===currentTransport)?currentTransport:'Lainnya';
+ $('#m').innerHTML=`<div class=bar><h2>${editing?`Edit Draft Surat Tugas #${existing.id}`:'Buat Surat Tugas Baru'}</h2></div>${existing?.spd?.length?'<p class="card">Hapus semua pelaksana sebelum mengubah rute atau tanggal perjalanan.</p>':''}<form class="card st-form" id=f>
+ <section class=st-form-section><h3>Kegiatan</h3><div class=g>${inp('nama_kegiatan','Nama kegiatan','text',field('nama_kegiatan'),true)}${area('maksud','Maksud perjalanan',field('maksud'),true)}</div></section>
+ <section class=st-form-section><h3>Asal, tujuan, dan jadwal</h3><div class=g>${sel('provinsi_asal','Provinsi asal',provinceOptions,true,provinceFields.asal)}${citySelect('asal','Kota/kabupaten asal','')}${sel('provinsi','Provinsi tujuan (acuan tarif)',provinceOptions,true,provinceFields.tujuan)}${citySelect('tujuan','Kota/kabupaten tujuan','')}</div><div class=st-date-pair>${inp('tgl_berangkat','Tanggal berangkat','date',field('tgl_berangkat'),true)}${inp('tgl_kembali','Tanggal kembali','date',field('tgl_kembali'),true)}</div></section>
+ <section class=st-form-section><h3>Anggaran dan dokumen</h3><div class=g>${sel('alat_pilihan','Alat angkutan',[['','Pilih alat angkutan'],...transportOptions],true,transportChoice)}<div id=other-transport ${transportChoice==='Lainnya'?'':'hidden'}>${inp('alat_lain','Sebutkan alat angkutan', 'text',transportChoice==='Lainnya'?currentTransport:'',transportChoice==='Lainnya')}</div><label class=auto-field>Akun anggaran<span class="required-mark" aria-hidden="true"> *</span><input name=akun type=text value="${esc(field('akun',S.akun_default))}" required readonly aria-readonly=true></label>${sel('jenis','Jenis kuitansi',['UP','LS'],true,field('jenis','UP'))}${inp('nomor_bukti','Nomor bukti','text',field('nomor_bukti'),true)}</div><p class=st-field-note><span class=form-legend-auto>Biru = terisi otomatis</span>. Akun anggaran mengikuti nilai referensi satuan kerja. Tanggal Surat Tugas dan tanggal tanda tangan diisi dengan pulpen setelah dokumen dicetak.</p><div class=g>${area('uraian_kegiatan','Uraian kegiatan untuk laporan',field('uraian_kegiatan'),true)}${area('keterangan_laporan','Keterangan laporan',field('keterangan_laporan'),true)}</div></section>
+ <div class=st-form-actions><button type=submit id=save-draft>${editing?'Simpan Perubahan':'Simpan Draft'}</button><button class=btn2 type=button id=add-participants ${editing?'':'disabled'}>${editing?'Kembali ke Rincian':'Tambah Pelaksana'}</button></div></form><dialog class=st-confirm-dialog id=st-draft-confirmation aria-labelledby=st-draft-confirmation-title aria-describedby=st-draft-confirmation-description><h3 id=st-draft-confirmation-title>Periksa kembali isian</h3><p id=st-draft-confirmation-description>Pastikan informasi Surat Tugas sudah sesuai sebelum draft disimpan.</p><label class=st-confirm-check><input id=st-draft-confirmation-check type=checkbox><span>Saya telah memeriksa seluruh isian dan memastikan data sudah benar.</span></label><div class=st-confirm-actions><button class="btn2" type=button data-cancel-draft>Tinjau kembali</button><button type=button data-confirm-draft disabled>Simpan Draft</button></div></dialog>`;
+ const originProvince=$('[name=provinsi_asal]'),destinationProvince=$('[name=provinsi]');
+ const setupCityDropdown=(name,province,initialCity)=>{const select=$(`[name=${name}_pilihan]`),other=$(`[name=${name}_lain]`);const update=preserve=>{const choices=cities.filter(city=>city.province===province.value).map(city=>city.name).sort((a,b)=>a.localeCompare(b,'id'));select.innerHTML='<option value="">Pilih kota/kabupaten</option>'+choices.map(city=>`<option value="${esc(city)}">${esc(city)}</option>`).join('')+'<option value="__other__">Lainnya (isi manual)</option>';select.disabled=!province.value;const matching=choices.find(city=>normalizeCity(city)===normalizeCity(initialCity));select.value=preserve||!province.value||!initialCity?'':matching||'__other__';other.hidden=select.value!=='__other__';other.required=select.value==='__other__';if(other.required)other.value=initialCity||''};update(false);province.addEventListener('change',()=>{initialCity='';update(true)});select.addEventListener('change',()=>{const manual=select.value==='__other__';other.hidden=!manual;other.required=manual;if(!manual)other.value=''})};
+ setupCityDropdown('asal',originProvince,cityFields.asal);setupCityDropdown('tujuan',destinationProvince,cityFields.tujuan);
+ const transportSelect=$('[name=alat_pilihan]'),otherTransport=$('#other-transport'),otherTransportInput=$('[name=alat_lain]'),syncTransport=()=>{const other=transportSelect.value==='Lainnya';otherTransport.hidden=!other;otherTransportInput.required=other;if(!other)otherTransportInput.value=''};transportSelect.addEventListener('change',syncTransport);syncTransport();
+ const start=$('[name=tgl_berangkat]'),end=$('[name=tgl_kembali]'),syncDateRange=()=>{end.min=start.value||'';if(end.value&&start.value&&end.value<start.value)end.value=''};start.addEventListener('input',syncDateRange);start.addEventListener('change',syncDateRange);syncDateRange();
+ let savedId=existing?.id||null;$('#add-participants').onclick=()=>{if(savedId)location.hash=`detail/${savedId}`};
+ const formData=form=>{const body=fd(form);body.asal=body.asal_pilihan==='__other__'?body.asal_lain:body.asal_pilihan;body.tujuan=body.tujuan_pilihan==='__other__'?body.tujuan_lain:body.tujuan_pilihan;body.alat=body.alat_pilihan==='Lainnya'?body.alat_lain:body.alat_pilihan;for(const key of ['asal_pilihan','asal_lain','tujuan_pilihan','tujuan_lain','alat_pilihan','alat_lain'])delete body[key];return body};
+ const draftConfirmation=$('#st-draft-confirmation'),confirmationCheck=$('#st-draft-confirmation-check'),confirmDraftButton=draftConfirmation.querySelector('[data-confirm-draft]');draftConfirmation.onclick=event=>{if(event.target===draftConfirmation)draftConfirmation.close()};const confirmDraft=()=>new Promise(resolve=>{let confirmed=false;confirmationCheck.checked=false;confirmDraftButton.disabled=true;confirmationCheck.onchange=()=>{confirmDraftButton.disabled=!confirmationCheck.checked};draftConfirmation.querySelector('[data-cancel-draft]').onclick=()=>draftConfirmation.close();confirmDraftButton.onclick=()=>{if(confirmationCheck.checked){confirmed=true;draftConfirmation.close()}};draftConfirmation.addEventListener('close',()=>resolve(confirmed),{once:true});draftConfirmation.showModal()});
+ bindSubmit($('#f'),async e=>{if(!editing){if(savedId)return;if(!await confirmDraft())return}if(editing){await api(`/st/${existing.id}`,{method:'PUT',body:formData(e.target)});toast('Draft berhasil diperbarui.',1);location.hash=`detail/${existing.id}`;return}const r=await api('/st',{body:formData(e.target)});savedId=r.id;e.target.dataset.saved='true';e.target.querySelectorAll('input,select,textarea').forEach(input=>input.disabled=true);$('#add-participants').disabled=false;$('#add-participants').classList.remove('btn2');await loadNotifications();toast('Draft berhasil disimpan. Lanjutkan dengan menambahkan pelaksana.',1)});
+}
+R.buat=async(version)=>formST(version);
+R.edit=async(id,version)=>{const s=await api('/st/'+id);if(version!==routeVersion)return;if(s.status!=='DRAFT'||U.role!=='OPERATOR'){toast('Hanya Operator yang dapat mengedit draft.');location.hash='dash';return}await formST(version,s)};
+R.draft=async(version)=>{const rows=await api('/st?status=DRAFT');if(version!==routeVersion)return;$('#m').innerHTML=`<div class=bar><h2>Daftar Draft Surat Tugas</h2><a class=btn href="#buat">+ Buat Surat Tugas Baru</a></div><div class=card>${rows.length?table([['id','No. Draft',row=>`#${row.id}`],['nomor','Nomor ST',row=>row.nomor||'Belum bernomor'],['maksud','Maksud'],['tujuan','Tujuan',row=>`${esc(row.tujuan||'-')} · ${esc(row.provinsi||'-')}`],['tgl_berangkat','Tanggal berangkat',row=>idDate(row.tgl_berangkat)],['tgl_kembali','Tanggal kembali',row=>idDate(row.tgl_kembali)],['dibuat_oleh','Dibuat oleh']],rows,row=>`<a class=btn href="#detail/${row.id}">Buka Draft</a>`):'<p>Belum ada draft Surat Tugas.</p>'}</div>`};
+R.detail=async(id,version=routeVersion)=>{const s=await api('/st/'+id),pg=await api('/ref/pegawai');if(version!==routeVersion)return;const d=s.status=='DRAFT'&&U.role=='OPERATOR',P=U.role=='PPK',canFinish=s.status=='TERBIT'&&['PPK','OPERATOR'].includes(U.role);
+ const b=(a,l,c='')=>`<button class="${c}" onclick="act(${id},'${a}',routeVersion,event)">${l}</button> `;
+ const canCorrectPdf=U.role=='PPK'&&['TERBIT','SELESAI'].includes(s.status),showPdfCorrection=canCorrectPdf&&s.spd.some(p=>!p.pangkat||!p.tingkat_biaya);
+ const pdfCorrection=showPdfCorrection?`<form class=card id=pdf-meta><h3>Lengkapi data PDF</h3><p>Hanya data pelaksana yang masih kosong pada ST terbit dapat diisi. Nilai yang sudah tersimpan tidak dapat ditimpa; koreksi dicatat di Audit Trail.</p><div class=g>${s.spd.map(p=>{const missing=[];if(!p.pangkat)missing.push(inp(`spd_${p.id}_pangkat`,`Pangkat pelaksana — ${esc(p.nama)}`,'text','',true));if(!p.tingkat_biaya)missing.push(inp(`spd_${p.id}_tingkat_biaya`,`Tingkat biaya — ${esc(p.nama)}`,'text','',true));return missing.join('')}).join('')}</div><button type=submit>Simpan Koreksi & Catat Audit</button></form>`:'';
+ $('#m').innerHTML=`<div class=bar><h2>Surat Tugas #${s.id} ${badge(s.status)}</h2>${d?`<a class=btn2 href="#edit/${id}">Edit Draft</a>`:''}${d&&s.spd.length?b('terbitkan','Terbitkan & Siap Cetak'):''}${P&&s.status=='DIAJUKAN'?b('terbitkan','Terbitkan')+b('kembalikan','Kembalikan','btn2')+b('batalkan','Batalkan','bd'):''}${canFinish?b('selesaikan','Tandai Selesai'):''}${d?`<button class=bd onclick="del(${id},routeVersion,event)">Hapus</button>`:''}</div><dialog class=st-number-dialog id=st-number-dialog aria-labelledby=st-number-title aria-describedby=st-number-description onclick="if(event.target===this)this.close()"><form method=dialog id=st-number-form><h3 id=st-number-title>Terbitkan Surat Tugas</h3><p id=st-number-description>Masukkan nomor Surat Tugas dari unit TU untuk menerbitkan dan menyiapkan dokumen cetak.</p><label for=st-number-input>Nomor Surat Tugas<input id=st-number-input name=nomor type=text placeholder="Masukkan nomor Surat Tugas" required autocomplete=off></label><div class=st-number-dialog-actions><button class=btn2 type=button data-cancel-number>Batal</button><button type=submit value=publish>Terbitkan & Siap Cetak</button></div></form></dialog>${pdfCorrection}
+ <section class="card st-summary" aria-label="Ringkasan Surat Tugas"><div class=st-purpose><span class=st-summary-kicker>Nama kegiatan</span><h3>${esc(s.nama_kegiatan||'Belum diisi')}</h3></div><div class=st-summary-facts>
+ <div class="st-fact st-fact-purpose"><span class=st-fact-label>Maksud perjalanan</span><div class=st-subfact><strong>${esc(s.maksud||'Belum diisi')}</strong></div></div>
+ <div class="st-fact st-fact-route"><span class=st-fact-label>Rute perjalanan</span><div class="st-subfacts st-route-subfacts">
+  <div class=st-subfact><span class=st-subfact-label>Asal</span><strong>${esc(s.asal||'Belum diisi')}</strong></div>
+  <div class=st-subfact><span class=st-subfact-label>Tujuan</span><strong>${esc(s.tujuan||'Belum diisi')}</strong></div>
+  <div class=st-subfact><span class=st-subfact-label>Provinsi tujuan</span><strong>${esc(s.provinsi||'Belum dipilih')}</strong></div>
+ </div></div>
+ <div class="st-fact st-fact-schedule"><span class=st-fact-label>Jadwal perjalanan</span><div class="st-subfacts st-schedule-subfacts">
+  <div class=st-subfact><span class=st-subfact-label>Tanggal berangkat</span><strong>${esc(idDate(s.tgl_berangkat))}</strong></div>
+  <div class=st-subfact><span class=st-subfact-label>Tanggal kembali</span><strong>${esc(idDate(s.tgl_kembali))}</strong></div>
+  <div class="st-subfact st-subfact-duration"><span class=st-subfact-label>Total durasi perjalanan</span><strong>${Number(s.lama)||0} hari</strong></div>
+ </div></div>
+ <div class="st-fact st-fact-transport"><span class=st-fact-label>Alat angkutan</span><div class=st-subfact><strong>${esc(s.alat||'Belum ditentukan')}</strong></div></div>
+ <div class="st-fact st-fact-number"><span class=st-fact-label>Nomor Surat Tugas</span><div class=st-subfact><strong>${esc(s.nomor||'Belum diterbitkan')}</strong></div></div>
+ </div>${s.alasan?`<p><b>Catatan:</b> ${esc(s.alasan)}</p>`:''}</section>
+ ${d?`<form class="card st-form" id=sp><div class=bar><h3>Tambah Pelaksana</h3></div><div class=g>
+ ${sel('pegawai_id','Pegawai pelaksana',pg.filter(p=>p.aktif).map(p=>[p.id,`${p.nama} (${p.eselon})`]),true)}
+ <label class=auto-field>Hari perjalanan (otomatis)<input type=number value="${Number(s.lama)||0}" readonly aria-readonly=true><small>Dihitung dari tanggal berangkat sampai tanggal kembali.</small></label>
+ <label class=auto-field>Malam menginap (otomatis)<input name=malam type=number value="${Math.max((Number(s.lama)||1)-1,0)}" readonly aria-readonly=true><small>Jumlah hari perjalanan dikurangi 1 malam.</small></label>
+ ${moneyInp('tarif_inap','Biaya penginapan per malam','',true)}
+ ${moneyInp('tiket','Biaya transportasi / tiket','',true)}
+ ${moneyInp('lain','Biaya lain','',true)}
+ ${moneyInp('biaya_riil','Pengeluaran riil tanpa bukti (opsional)','')}
+ ${moneyInp('ppn','PPN aktual (opsional)','')}
+ ${moneyInp('pph','PPh aktual (opsional)','')}
+ </div><p class=form-legend><span class=form-legend-auto>Biru = terisi otomatis</span> · <span class=required-mark aria-hidden=true>*</span> Wajib diisi · (opsional) boleh dikosongkan</p><button type=submit>Tambahkan</button></form>`:''}
+ <div class=card><div class=bar><h3>Rincian Pelaksana & Biaya</h3><span>${s.spd.length} pelaksana</span></div>${costBreakdown(s.spd,id,d)}</div>`;
+ if(d)bindSubmit($('#sp'),async e=>{await api(`/st/${id}/spd`,{body:fd(e.target)});await R.detail(id,version)});
+ if(showPdfCorrection)bindSubmit($('#pdf-meta'),async e=>{const body={},spd=new Map();for(const [key,value] of Object.entries(fd(e.target))){const match=key.match(/^spd_(\d+)_(pangkat|tingkat_biaya)$/);if(match){const row=spd.get(match[1])||{id:Number(match[1])};row[match[2]]=value;spd.set(match[1],row)}else body[key]=value}body.spd=[...spd.values()];await api(`/st/${id}/pdf-metadata`,{method:'PUT',body});toast('Koreksi disimpan dan dicatat di Audit Trail',1);await R.detail(id,version)})};
+const requestStNumber=()=>{const dialog=$('#st-number-dialog'),form=$('#st-number-form'),input=$('#st-number-input');return new Promise(resolve=>{input.value='';input.setCustomValidity('');input.oninput=()=>input.setCustomValidity('');form.onsubmit=event=>{event.preventDefault();const nomor=input.value.trim();input.setCustomValidity(nomor?'':'Masukkan nomor Surat Tugas.');if(!form.reportValidity())return;dialog.dataset.nomor=nomor;dialog.close('publish')};dialog.querySelector('[data-cancel-number]').onclick=()=>dialog.close('cancel');dialog.addEventListener('close',()=>resolve(dialog.returnValue==='publish'?dialog.dataset.nomor:null),{once:true});dialog.showModal();input.focus()})};
+let actionDialogSequence=0;
+function requestAppAction({title,description,confirmLabel='Lanjutkan',danger=false,reasonLabel='',requiredReason=false}){const dialog=document.createElement('dialog');dialog.className='app-action-dialog';const heading=document.createElement('h3'),copy=document.createElement('p'),form=document.createElement('form'),actions=document.createElement('div'),cancel=document.createElement('button'),confirmButton=document.createElement('button');heading.id=`app-action-title-${++actionDialogSequence}`;dialog.setAttribute('aria-labelledby',heading.id);heading.textContent=title;copy.textContent=description;form.method='dialog';actions.className='app-action-dialog-actions';cancel.type='button';cancel.className='btn2';cancel.textContent='Batal';confirmButton.type='submit';confirmButton.textContent=confirmLabel;if(danger)confirmButton.className='bd';let reasonInput=null;if(reasonLabel){const label=document.createElement('label');label.textContent=reasonLabel;reasonInput=document.createElement('textarea');reasonInput.required=requiredReason;reasonInput.maxLength=1000;reasonInput.rows=4;label.append(reasonInput);form.append(label)}actions.append(cancel,confirmButton);form.append(actions);dialog.append(heading,copy,form);document.body.append(dialog);return new Promise(resolve=>{let result=null;cancel.onclick=()=>dialog.close('cancel');form.onsubmit=event=>{event.preventDefault();const reason=reasonInput?.value.trim()||'';if(requiredReason&&!reason){reasonInput.setCustomValidity('Alasan wajib diisi.');reasonInput.reportValidity();return}reasonInput?.setCustomValidity('');result={confirmed:true,reason};dialog.close('confirm')};if(reasonInput)reasonInput.oninput=()=>reasonInput.setCustomValidity('');dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close('cancel')});dialog.addEventListener('close',()=>{const confirmed=dialog.returnValue==='confirm';dialog.remove();resolve(confirmed?(result||{confirmed:true,reason:''}):{confirmed:false,reason:''})},{once:true});dialog.showModal();(reasonInput||cancel).focus()})}
+const confirmAppAction=async options=>(await requestAppAction(options)).confirmed;
+window.act=async(id,a,version=routeVersion,event)=>{const button=event?.currentTarget;if(button?.disabled)return;if(button)button.disabled=true;try{const b={},label={ajukan:'mengajukan ST ke PPK',terbitkan:'menerbitkan ST',kembalikan:'mengembalikan ST ke operator',batalkan:'membatalkan ST',selesaikan:'menandai ST selesai'}[a]||a;if(a==='terbitkan'){const nomor=await requestStNumber();if(nomor===null)return;b.nomor=nomor}else{const result=await requestAppAction({title:`Konfirmasi ${label}`,description:`Apakah Anda yakin ingin ${label}?`,confirmLabel:a==='batalkan'?'Batalkan Surat Tugas':'Lanjutkan',danger:a==='batalkan',reasonLabel:['kembalikan','batalkan'].includes(a)?'Alasan':'' ,requiredReason:['kembalikan','batalkan'].includes(a)});if(!result.confirmed)return;if(result.reason)b.alasan=result.reason}await api(`/st/${id}/${a}`,{body:b});await loadNotifications();toast('Berhasil: '+label,1);if(version===routeVersion)await R.detail(id,version)}catch(error){if(!error?.uiNotified)toast('Tindakan gagal. Coba lagi.')}finally{if(button)button.disabled=false}};
+const confirmDeleteDraft=()=>new Promise(resolve=>{const dialog=document.createElement('dialog');dialog.className='st-confirm-dialog';dialog.setAttribute('aria-labelledby','delete-draft-title');dialog.setAttribute('aria-describedby','delete-draft-description');dialog.innerHTML='<h3 id=delete-draft-title>Hapus draft?</h3><p id=delete-draft-description>Draft ini akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.</p><form method=dialog class=st-confirm-actions><button class=btn2 value=cancel>Batal</button><button class=bd value=confirm>Hapus draft</button></form>';dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close('cancel')});dialog.addEventListener('close',()=>{const confirmed=dialog.returnValue==='confirm';dialog.remove();resolve(confirmed)},{once:true});document.body.append(dialog);dialog.showModal();dialog.querySelector('[value=cancel]').focus()});
+window.del=async(id,version=routeVersion,event)=>{const button=event?.currentTarget;if(button?.disabled)return;if(button)button.disabled=true;try{if(await confirmDeleteDraft()){await api('/st/'+id,{method:'DELETE'});if(version===routeVersion)location.hash='dash'}}catch(error){if(!error?.uiNotified)toast('Penghapusan gagal. Coba lagi.')}finally{if(button)button.disabled=false}};
+window.rm=async(id,p,version=routeVersion,event)=>{const button=event?.currentTarget;if(button?.dataset.busy==='true')return;if(button){button.dataset.busy='true';button.setAttribute('aria-disabled','true')}try{await api(`/st/${id}/spd/${p}`,{method:'DELETE'});if(version===routeVersion)await R.detail(id,version)}catch(error){if(!error?.uiNotified)toast('Penghapusan gagal. Coba lagi.')}finally{if(button){button.dataset.busy='false';button.removeAttribute('aria-disabled')}}};
+R.setuju=async(version)=>{const r=await api('/st?status=DIAJUKAN');if(version!==routeVersion)return;$('#m').innerHTML=`<div class=bar><h2>Persetujuan / Penerbitan</h2><span>${r.length} ST menunggu pemeriksaan</span></div><div class=card>${r.length?table([['nomor','Nomor Draft',x=>esc(x.nomor||`Draft #${x.id}`)],['maksud','Maksud'],['tujuan','Tujuan',x=>`${esc(x.tujuan||'')} (${esc(x.provinsi||'')})`],['tgl_berangkat','Berangkat'],['tgl_kembali','Kembali'],['dibuat_oleh','Diajukan oleh'],['jml','Pelaksana'],['total','Total biaya',x=>rp(x.total)],['flag','Peringatan',x=>x.flag?'Biaya inap melebihi SBM':'-']],r,x=>`<a class=btn href="#detail/${x.id}">Periksa & Proses</a>`):'<p>Tidak ada Surat Tugas yang menunggu pemeriksaan PPK.</p>'}</div>`};
+R.cetak=async(version)=>{const r=(await api('/st')).filter(x=>['TERBIT','SELESAI'].includes(x.status));if(version!==routeVersion)return;const timestamp=value=>{const parsed=Date.parse(value||'');return Number.isFinite(parsed)?parsed:0};r.sort((a,b)=>timestamp(b.diterbitkan_pada)-timestamp(a.diterbitkan_pada)||timestamp(b.created_at)-timestamp(a.created_at)||Number(b.id)-Number(a.id));
+ const documentTypes=PDF_TYPES.filter(([type])=>type!=='lengkap'&&(U.role!=='PEGAWAI'||['spd','rincian','riil'].includes(type)));
+ $('#m').innerHTML=`<div class=bar><h2>Cetak Dokumen PDF</h2></div><p class=pdf-intro>Pilih Surat Tugas berdasarkan nama kegiatan dan pegawai yang bertugas.</p><div class=pdf-list>${r.length?r.map(row=>{const employees=Array.isArray(row.nama_pegawai)?row.nama_pegawai:[];return `<article class=pdf-card data-st-id="${esc(row.id)}"><div class="pdf-card-main"><div class=pdf-card-info><span class=pdf-card-label>Nama kegiatan</span><h3>${esc(row.nama_kegiatan||'Nama kegiatan belum diisi')}</h3><div class=pdf-card-meta><span>${esc(row.nomor||`Surat Tugas #${row.id}`)}</span>${badge(row.status)}</div><div class=pdf-card-employees><span class=pdf-card-label>Nama pegawai</span>${employees.length?`<ul class=pdf-card-employee-list>${employees.map(name=>`<li class=pdf-card-employee>${esc(name)}</li>`).join('')}</ul>`:'<span class=pdf-card-empty>Nama pegawai belum tersedia</span>'}</div></div><button class="pdf-choose-button btn2" type=button onclick="openPdfSelection(event,this)">Unduh/Cetak Dokumen</button></div></article>`}).join(''):'<div class=card><p>Belum ada Surat Tugas berstatus terbit yang dapat dicetak.</p></div>'}</div><p><small>Dokumen PDF dihasilkan dari data dan snapshot biaya yang tersimpan. Riwayat cetak tercatat di Audit Trail.</small></p><dialog id=pdf-selection-dialog class=pdf-selection-dialog aria-labelledby=pdf-selection-title onclick="if(event.target===this)this.close()" onkeydown="if(event.key==='Escape'){event.preventDefault();this.close()}"><div class=pdf-selection-content><header class=pdf-selection-header><div><h3 id=pdf-selection-title>Unduh/Cetak Dokumen</h3><p>Pilih satu atau beberapa jenis dokumen dan format unduhan.</p></div><button class="btn2 pdf-selection-close" type=button onclick="this.closest('dialog').close()">Tutup</button></header><section class=pdf-documents><div class=pdf-documents-heading><span>Dokumen</span><label><input type=checkbox data-select-all aria-label="Pilih semua dokumen">Pilih semua</label></div><div class=pdf-doc-grid>${documentTypes.map(([type,label])=>`<label class=pdf-doc-option><input type=checkbox name=pdf-type value="${type}">${esc(label)}</label>`).join('')}</div></section><fieldset class=pdf-output-choice><legend>Format unduhan</legend><label><input type=radio name=pdf-format value=pdf checked>PDF gabungan</label><label><input type=radio name=pdf-format value=zip>ZIP (PDF terpisah)</label></fieldset><p id=pdf-selection-error class=pdf-selection-error role=alert aria-live=assertive hidden></p><button class="pdf-selection-submit btn2" type=button onclick="preparePdfSelection(event,this)">Unduh/Cetak Dokumen</button></div></dialog><dialog id=pdf-preview-dialog class=pdf-preview-dialog aria-labelledby=pdf-preview-title onclick="if(event.target===this)this.close()" onkeydown="if(event.key==='Escape'){event.preventDefault();this.close()}"><div class=pdf-preview-layout><header class=pdf-preview-header><h3 id=pdf-preview-title>Dokumen PDF</h3><div class=pdf-preview-actions><a id=pdf-preview-download class=btn href download>Unduh PDF</a><button class=btn2 type=button onclick="this.closest('dialog').close()">Tutup</button></div></header><iframe id=pdf-preview-frame class=pdf-preview-frame title="Pratinjau dokumen PDF"></iframe><section id=pdf-archive-preview class=pdf-archive-preview hidden aria-live=polite></section></div></dialog>`;
+ $('#m .pdf-list').outerHTML=r.length?`<div class="card pdf-table-card">${table([['nama_kegiatan','Nama kegiatan',row=>esc(row.nama_kegiatan||'Nama kegiatan belum diisi')],['nomor','Nomor Surat Tugas',row=>esc(row.nomor||`Surat Tugas #${row.id}`)],['nama_pegawai','Nama pegawai',row=>esc(Array.isArray(row.nama_pegawai)&&row.nama_pegawai.length?row.nama_pegawai.join(', '):'Nama pegawai belum tersedia')],['status','Status',row=>badge(row.status||'')]],r,row=>`<div data-st-id="${esc(row.id)}"><div class="pdf-card-info" hidden><h3>${esc(row.nama_kegiatan||'Nama kegiatan belum diisi')}</h3></div><button class="btn2" type=button onclick="openPdfSelection(event,this)">Unduh/Cetak PDF</button></div>`)}</div>`:'<div class=card><p>Belum ada Surat Tugas berstatus terbit yang dapat dicetak.</p></div>';
+ const selectionDialog=$('#pdf-selection-dialog'),all=selectionDialog.querySelector('[data-select-all]'),checks=[...selectionDialog.querySelectorAll('input[name=pdf-type]')],error=$('#pdf-selection-error'),clearError=()=>{error.textContent='';error.hidden=true};all.onchange=()=>{checks.forEach(input=>input.checked=all.checked);clearError()};for(const input of checks)input.onchange=()=>{all.checked=checks.every(item=>item.checked);all.indeterminate=checks.some(item=>item.checked)&&!all.checked;clearError()};
+ const dialog=$('#pdf-preview-dialog');dialog.addEventListener('close',()=>{const frame=$('#pdf-preview-frame');if(frame){frame.src='about:blank';frame.hidden=false}const archivePreview=$('#pdf-archive-preview');if(archivePreview){archivePreview.hidden=true;archivePreview.innerHTML=''}if(pdfPreviewUrl){URL.revokeObjectURL(pdfPreviewUrl);pdfPreviewUrl=null}})};
+const MONEY_FIELDS=new Set(['harian','inap1','inap2','inap3','inap4','taksi','uang_harian_dalam_kota_8jam','uang_harian_diklat']);
+const GOLONGAN_PANGKAT={
+ 'I/a':'Juru Muda','I/b':'Juru Muda Tingkat I','I/c':'Juru','I/d':'Juru Tingkat I',
+ 'II/a':'Pengatur Muda','II/b':'Pengatur Muda Tingkat I','II/c':'Pengatur','II/d':'Pengatur Tingkat I',
+ 'III/a':'Penata Muda','III/b':'Penata Muda Tingkat I','III/c':'Penata','III/d':'Penata Tingkat I',
+ 'IV/a':'Pembina','IV/b':'Pembina Tingkat I','IV/c':'Pembina Utama Muda','IV/d':'Pembina Utama Madya','IV/e':'Pembina Utama'
+};
+const ESELON_OPTIONS=[['I.a','Eselon I.a'],['I.b','Eselon I.b'],['II.a','Eselon II.a'],['II.b','Eselon II.b'],['III.a','Eselon III.a'],['III.b','Eselon III.b'],['IV.a','Eselon IV.a'],['IV.b','Eselon IV.b'],['V.a','Eselon V.a'],['Non-eselon','Non-eselon']];
+const JABATAN_OPTIONS=['Administrator','Pengawas','Pelaksana','Kepala Bagian','Kepala Subbagian','Kepala Seksi','Analis Kebijakan','Analis Sumber Daya Manusia Aparatur','Analis Keuangan','Analis Pengelolaan Keuangan APBN','Arsiparis','Perencana','Pranata Komputer','Pengelola Pengadaan Barang/Jasa','Penata Laksana Barang'];
+const CF={pegawai:[['nama','Nama'],['nip','NIP'],['golongan','Golongan/Ruang'],['pangkat','Pangkat'],['jabatan','Jabatan'],['eselon','Eselon'],['tingkat_biaya','Tingkat biaya perjalanan dinas'],['unit_kerja','Unit kerja']],tarif:[['tahun','Tahun anggaran','number'],['provinsi','Provinsi'],['harian','Uang harian','number'],['inap1','Penginapan eselon I','number'],['inap2','Penginapan eselon II','number'],['inap3','Penginapan eselon III','number'],['inap4','Penginapan eselon IV','number'],['taksi','Taksi','number'],['uang_harian_dalam_kota_8jam','Uang harian dalam kota (8 jam)','number'],['uang_harian_diklat','Uang harian diklat','number']],pejabat:[['peran','Peran'],['nama','Nama'],['nip','NIP'],['jabatan','Jabatan']],dasar_hukum:[['urutan','Urutan','number'],['teks','Teks']]};
+async function manageUsers(version){
+ const [accounts,employees]=await Promise.all([api('/ref/users'),api('/ref/pegawai')]);
+ if(version!==routeVersion)return;
+ const activeEmployees=employees,linkedEmployeeIds=new Set(accounts.filter(account=>account.pegawai_id).map(account=>Number(account.pegawai_id))),availableEmployees=activeEmployees.filter(employee=>employee.aktif&&!linkedEmployeeIds.has(Number(employee.id)));
+ let search='',roleFilter='',statusFilter='';
+ const employeeOptions=employees=>employees.map(employee=>`<option value="${employee.id}">${esc(employee.nama)}${employee.nip?` · ${esc(employee.nip)}`:''}${employee.aktif?'':' (nonaktif)'}</option>`).join('');
+ $('#m').innerHTML=`<div class=bar><h2>Kelola Akun</h2></div><p class=account-help>Kelola akses pengguna dan akun yang terhubung ke pegawai.</p><form class="card account-create-card" id=account-form><h3>Buat Akun Baru</h3><p class=account-help>Nama lengkap akan mengikuti pegawai yang dipilih. Kata sandi minimal 8 karakter.</p><div class="g account-fields"><label>Nama pengguna<span class=required-mark aria-hidden=true> *</span><input name=username required minlength=3 maxlength=64 pattern="[A-Za-z0-9._-]{3,64}" title="3–64 karakter: huruf, angka, titik, garis bawah, atau tanda hubung" autocomplete=off placeholder="Contoh: operator.baru"></label><label>Kata sandi<span class=required-mark aria-hidden=true> *</span><input name=password type=password minlength=8 maxlength=128 autocomplete=new-password placeholder="Kata sandi minimal 8 karakter" required><span class=account-password-control><input id=account-show-password type=checkbox> Tampilkan kata sandi</span></label><label>Pilih pegawai<select name=pegawai_id><option value="">Tidak dihubungkan</option>${employeeOptions(availableEmployees)}</select><small>Wajib untuk peran PEGAWAI. Satu pegawai hanya dapat terhubung ke satu akun.</small></label><label>Peran<span class=required-mark aria-hidden=true> *</span><select name=role required><option value="">Pilih peran</option>${ALL.map(role=>`<option value="${role}">${role}</option>`).join('')}</select></label></div><div class=account-form-actions><button type=submit>Tambah Akun</button></div></form><div class=card><div class=account-toolbar><label>Cari akun<input id=account-search type=search placeholder="Nama pengguna, pegawai, atau NIP"></label><label>Filter peran<select id=account-role-filter><option value="">Semua peran</option>${ALL.map(role=>`<option value="${role}">${role}</option>`).join('')}</select></label><label>Filter status<select id=account-status-filter><option value="">Semua status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select></label></div></div><div class=card id=account-table></div><dialog class=account-edit-dialog id=account-edit-dialog aria-labelledby=account-edit-title><form id=account-edit-form><h3 id=account-edit-title>Ubah akun</h3><p>Kata sandi minimal 8 karakter. Kosongkan jika tidak ingin mengubahnya.</p><div class="g account-fields"><label>Nama pengguna<span class=required-mark aria-hidden=true> *</span><input name=username required minlength=3 maxlength=64 pattern="[A-Za-z0-9._-]{3,64}" title="3–64 karakter: huruf, angka, titik, garis bawah, atau tanda hubung" autocomplete=off></label><label>Kata sandi<input name=password type=password minlength=8 maxlength=128 autocomplete=new-password placeholder="Kosongkan jika tidak diubah"><span class=account-password-control><input name=show-password type=checkbox> Tampilkan kata sandi</span></label><label>Pilih pegawai<select name=pegawai_id><option value="">Tidak dihubungkan</option></select><small>Wajib untuk peran PEGAWAI. Pegawai harus unik di setiap akun.</small></label><label>Peran<span class=required-mark aria-hidden=true> *</span><select name=role required><option value="">Pilih peran</option>${ALL.map(role=>`<option value="${role}">${role}</option>`).join('')}</select></label></div><div class=account-edit-actions><button class=btn2 type=button data-cancel-edit>Batal</button><button type=submit>Simpan Perubahan</button></div></form></dialog><dialog class=account-password-dialog id=account-password-dialog aria-labelledby=account-password-title><form id=account-password-form><h3 id=account-password-title>Reset kata sandi</h3><p id=account-password-description></p><label>Kata sandi baru<span class=required-mark aria-hidden=true> *</span><input name=password type=password required minlength=8 maxlength=128 autocomplete=new-password placeholder="Kata sandi minimal 8 karakter"><span class=account-password-control><input name=show type=checkbox> Tampilkan kata sandi</span></label><div class=account-password-actions><button class=btn2 type=button data-cancel-reset>Batal</button><button type=submit>Reset Kata Sandi</button></div></form></dialog>`;
+ const form=$('#account-form'),password=form.elements.password,role=form.elements.role,employee=form.elements.pegawai_id,editDialog=$('#account-edit-dialog'),editForm=$('#account-edit-form'),resetDialog=$('#account-password-dialog'),resetForm=$('#account-password-form');
+ const infoDialog=document.createElement('dialog');infoDialog.className='account-info-dialog';infoDialog.setAttribute('aria-labelledby','account-info-title');infoDialog.addEventListener('click',event=>{if(event.target===infoDialog)infoDialog.close()});$('#m').append(infoDialog);
+ window.showAccountInfo=id=>{const account=accounts.find(item=>Number(item.id)===Number(id));if(!account)return;const item=(label,value)=>`<div class=account-info-item><span>${label}</span><strong>${value}</strong></div>`;infoDialog.innerHTML=`<h3 id=account-info-title>Info akun</h3><p>Informasi akses dan aktivitas akun. Kata sandi tidak ditampilkan.</p><div class=account-info-grid>${item('Nama pengguna',esc(account.username||'-'))}${item('Nama pegawai',esc(account.nama||'Tidak dihubungkan'))}${item('NIP',esc(account.pegawai_nip||'-'))}${item('Peran',esc(account.role||'-'))}${item('Status',account.aktif?'Aktif':'Nonaktif')}${item('Tanggal dibuat',account.created_at?formatWib(account.created_at):'-')}${item('Terakhir login',account.last_login?formatWib(account.last_login):'Belum pernah login')}</div><div class=account-info-actions><button class=btn2 type=button data-close-account-info>Tutup</button></div>`;infoDialog.querySelector('[data-close-account-info]').onclick=()=>infoDialog.close();infoDialog.showModal()};
+ const accountTable=$('#account-table'),addInfoAction=()=>{if(version!==routeVersion){accountObserver.disconnect();return}accountTable.querySelectorAll('.account-action-select').forEach(select=>{if(!select.querySelector('[value="info"]'))select.insertBefore(new Option('Info akun','info'),select.options[1]||null)})},accountObserver=new MutationObserver(addInfoAction);accountObserver.observe(accountTable,{childList:true,subtree:true});addInfoAction();
+ const updateRoleRequirement=(form)=>{form.elements.pegawai_id.required=form.elements.role.value==='PEGAWAI'};
+ $('#account-show-password').onchange=event=>{password.type=event.target.checked?'text':'password'};
+ role.onchange=()=>updateRoleRequirement(form);
+ editForm.elements.role.onchange=()=>updateRoleRequirement(editForm);
+ editForm.elements['show-password'].onchange=event=>{editForm.elements.password.type=event.target.checked?'text':'password'};
+ const paintTable=()=>{const query=search.trim().toLocaleLowerCase('id'),rows=accounts.filter(account=>(!query||[account.username,account.nama,account.pegawai_nip].some(value=>String(value||'').toLocaleLowerCase('id').includes(query)))&&(!roleFilter||account.role===roleFilter)&&(statusFilter===''||String(account.aktif)===statusFilter));$('#account-table').innerHTML=table([['username','Nama pengguna'],['nama','Nama pegawai',account=>esc(account.nama||'-')],['pegawai_nip','NIP',account=>esc(account.pegawai_nip||'-')],['role','Peran'],['aktif','Status',account=>`<span class="account-status ${account.aktif?'is-active':'is-inactive'}">${account.aktif?'Aktif':'Nonaktif'}</span>`],['last_login','Terakhir login',account=>account.last_login?formatWib(account.last_login):'Belum pernah login']],rows,account=>`<select class=account-action-select aria-label="Aksi untuk akun ${esc(account.username)}" onchange="handleAccountAction(this,${account.id},${account.aktif?0:1},${version},event)"><option value="">Pilih aksi</option><option value="edit">Ubah</option><option value="reset">Reset kata sandi</option><option value="status">${account.aktif?'Nonaktifkan':'Aktifkan'}</option></select>`)};
+ window.editAccount=id=>{const account=accounts.find(item=>Number(item.id)===Number(id));if(!account)return;editForm.dataset.accountId=account.id;editForm.elements.username.value=account.username;editForm.elements.password.value='';editForm.elements.password.type='password';editForm.elements['show-password'].checked=false;editForm.elements.pegawai_id.innerHTML='<option value="">Tidak dihubungkan</option>'+employeeOptions([...availableEmployees,...activeEmployees.filter(item=>Number(item.id)===Number(account.pegawai_id))]);editForm.elements.pegawai_id.value=account.pegawai_id||'';editForm.elements.role.value=account.role;updateRoleRequirement(editForm);$('#account-edit-title').textContent=`Ubah Akun · ${account.username}`;editDialog.showModal();editForm.elements.username.focus()};
+ window.resetAccountPassword=id=>{const account=accounts.find(item=>Number(item.id)===Number(id));if(!account)return;resetForm.dataset.accountId=account.id;$('#account-password-description').textContent=`Atur kata sandi baru untuk akun ${account.username}. Kata sandi tidak akan ditampilkan lagi setelah disimpan.`;resetForm.elements.password.value='';resetForm.elements.show.checked=false;resetForm.elements.password.type='password';resetDialog.showModal();resetForm.elements.password.focus()};
+ window.handleAccountAction=(select,id,status,version,event)=>{const action=select.value;select.value='';if(action==='edit')window.editAccount(id);else if(action==='reset')window.resetAccountPassword(id);else if(action==='status')window.tg('users',id,status,version,event)};
+ const handleAccountAction=window.handleAccountAction;window.handleAccountAction=(select,id,status,version,event)=>{if(select.value==='info'){select.value='';window.showAccountInfo(id);return}handleAccountAction(select,id,status,version,event)};
+ $('#account-search').oninput=event=>{search=event.target.value;paintTable()};$('#account-role-filter').onchange=event=>{roleFilter=event.target.value;paintTable()};$('#account-status-filter').onchange=event=>{statusFilter=event.target.value;paintTable()};editDialog.querySelector('[data-cancel-edit]').onclick=()=>editDialog.close();editDialog.onclick=event=>{if(event.target===editDialog)editDialog.close()};paintTable();updateRoleRequirement(form);
+ bindSubmit(form,async event=>{const payload=Object.fromEntries(new FormData(event.target));if(role.value==='PEGAWAI'&&!employee.value)throw new Error('Pilih pegawai untuk akun dengan peran PEGAWAI.');await api('/ref/users',{body:payload});toast('Akun berhasil dibuat.',1);await manageUsers(version)});
+ bindSubmit(editForm,async event=>{const accountId=editForm.dataset.accountId,current=accounts.find(account=>Number(account.id)===Number(accountId));if(!current)throw new Error('Akun yang akan diubah tidak ditemukan.');const payload=Object.fromEntries(new FormData(event.target));if(editForm.elements.role.value==='PEGAWAI'&&!editForm.elements.pegawai_id.value)throw new Error('Pilih pegawai untuk akun dengan peran PEGAWAI.');if((current.role!==payload.role||String(current.pegawai_id||'')!==String(payload.pegawai_id||''))&&!await confirmAppAction({title:'Konfirmasi perubahan akses',description:'Perubahan peran atau pegawai dapat mengubah hak akses akun. Lanjutkan?'}))return;if(payload.password&&!await confirmAppAction({title:'Konfirmasi perubahan kata sandi',description:'Kata sandi akun akan diganti. Lanjutkan?',confirmLabel:'Ganti kata sandi',danger:true}))return;if(!payload.password)delete payload.password;await api(`/ref/users/${accountId}`,{method:'PUT',body:payload});editDialog.close();toast('Perubahan akun berhasil disimpan.',1);await manageUsers(version)});
+ resetForm.querySelector('[data-cancel-reset]').onclick=()=>resetDialog.close();resetForm.elements.show.onchange=()=>{resetForm.elements.password.type=resetForm.elements.show.checked?'text':'password'};bindSubmit(resetForm,async event=>{const accountId=resetForm.dataset.accountId;if(!accountId)throw new Error('Akun untuk reset kata sandi tidak valid.');if(!await confirmAppAction({title:'Reset kata sandi?',description:'Pengguna perlu menggunakan kata sandi baru saat login berikutnya.',confirmLabel:'Reset kata sandi',danger:true}))return;await api(`/ref/users/${accountId}`,{method:'PUT',body:{password:resetForm.elements.password.value}});resetDialog.close();toast('Kata sandi berhasil direset.',1);await manageUsers(version)});
+}
+async function master(n,version=routeVersion){if(n==='users')return manageUsers(version);const [r,regionResponse]=await Promise.all([api('/ref/'+n),n==='tarif'?fetch('/data/indonesia-regencies.json'):Promise.resolve(null)]);if(version!==routeVersion)return;let provinceChoices=[];if(n==='tarif'){if(!regionResponse?.ok)throw new Error('Daftar provinsi gagal dimuat. Muat ulang halaman atau hubungi administrator.');const data=await regionResponse.json();if(!Array.isArray(data.regions))throw new Error('Format daftar wilayah tidak valid.');const alias=value=>value==='DAERAH ISTIMEWA YOGYAKARTA'?'DI YOGYAKARTA':value.toUpperCase(),provinces=new Set([...r.map(item=>item.provinsi),...data.regions.map(item=>alias(item.province))]);provinceChoices=[['','Pilih provinsi'],...Array.from(provinces).sort((a,b)=>a.localeCompare(b,'id'))]}const c=CF[n],required=(field)=>n==='pegawai'&&['nama','nip'].includes(field)||n==='tarif'&&['tahun','provinsi'].includes(field);$('#m').innerHTML=`<div class=bar><h2>${M.find(x=>x[0]==n)[1]}</h2><input id=q aria-label="Cari data" placeholder="Cari..." style="width:220px"></div><form class=card id=f><div class=g>${c.map(x=>{const [field,label,type]=x;if(n==='pegawai'&&field==='golongan')return sel('golongan','Golongan/Ruang',[['','Pilih golongan'],...Object.keys(GOLONGAN_PANGKAT)],false);if(n==='pegawai'&&field==='pangkat')return sel('pangkat','Pangkat',[['','Pilih golongan terlebih dahulu']],false);if(n==='pegawai'&&field==='eselon')return sel('eselon','Eselon',[['','Pilih eselon'],...ESELON_OPTIONS],false);if(n==='pegawai'&&field==='jabatan')return `<label>Jabatan<select name=jabatan_pilihan><option value="">Pilih jabatan</option>${JABATAN_OPTIONS.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join('')}<option value="__other__">Lainnya (isi manual)</option></select><input name=jabatan_manual type=text placeholder="Ketik jabatan" aria-label="Jabatan lainnya" hidden></label>`;if(n==='tarif'&&field==='provinsi')return sel('provinsi','Provinsi',provinceChoices,required(field));if(n==='pegawai'&&field==='tingkat_biaya')return `<label>Tingkat Biaya Perjalanan Dinas<input name=tingkat_biaya type=text><small>Isi sesuai klasifikasi perjalanan dinas yang berlaku di satuan kerja.</small></label>`;return field==='role'?sel('role','Peran',ALL,true):MONEY_FIELDS.has(field)?moneyInp(field,label,''):inp(field,label,type,'',required(field))}).join('')}</div><button type=submit>Tambah / Simpan</button></form><div class=card id=t></div>`;
+ if(n==='pegawai'){const golongan=$('[name=golongan]'),pangkat=$('[name=pangkat]'),jabatanChoice=$('[name=jabatan_pilihan]'),jabatanManual=$('[name=jabatan_manual]');const updatePangkat=()=>{const value=golongan.value;pangkat.innerHTML=`<option value="">${value?'Pilih pangkat':'Pilih golongan terlebih dahulu'}</option>`+(GOLONGAN_PANGKAT[value]?`<option value="${esc(GOLONGAN_PANGKAT[value])}">${esc(GOLONGAN_PANGKAT[value])}</option>`:'');pangkat.disabled=!value;pangkat.value=GOLONGAN_PANGKAT[value]||''};golongan.addEventListener('change',updatePangkat);updatePangkat();jabatanChoice.addEventListener('change',()=>{const manual=jabatanChoice.value==='__other__';jabatanManual.hidden=!manual;jabatanManual.required=manual;if(!manual)jabatanManual.value=''})}
+ const T=()=>{const k=$('#q').value.toLowerCase();$('#t').innerHTML=table([['id','ID'],...c.filter(x=>x[0]!='password').map(x=>MONEY_FIELDS.has(x[0])?[x[0],x[1],row=>rp(row[x[0]])]:[x[0],x[1]]),['aktif','Aktif',r=>r.aktif===undefined?'':r.aktif?'Ya':'Tidak']],r.filter(x=>JSON.stringify(x).toLowerCase().includes(k)),n=='tarif'?null:r=>r.aktif===undefined?'':`<a href=# onclick="event.preventDefault();tg('${n}',${r.id},${r.aktif?0:1},${version},event)">${r.aktif?'Nonaktifkan':'Aktifkan'}</a>`)};T();$('#q').oninput=T;
+ bindSubmit($('#f'),async e=>{const b=fd(e.target);if(n==='pegawai'){b.jabatan=b.jabatan_pilihan==='__other__'?b.jabatan_manual:b.jabatan_pilihan;delete b.jabatan_pilihan;delete b.jabatan_manual}Object.keys(b).forEach(k=>b[k]===''&&delete b[k]);await api('/ref/'+n,{body:b});toast('Tersimpan',1);await master(n,version)})}
+window.tg=async(n,i,v,version=routeVersion,event)=>{const button=event?.currentTarget;if(button?.dataset.busy==='true')return;if(n==='users'&&!await confirmAppAction({title:v?'Aktifkan akun?':'Nonaktifkan akun?',description:v?'Pengguna akan dapat masuk kembali ke sistem.':'Pengguna tidak dapat masuk selama akun nonaktif.',confirmLabel:v?'Aktifkan akun':'Nonaktifkan akun',danger:!v}))return;if(button){button.dataset.busy='true';button.setAttribute('aria-disabled','true')}try{await api(`/ref/${n}/${i}`,{method:'PUT',body:{aktif:v}});if(version===routeVersion)await master(n,version)}catch(error){if(!error?.uiNotified)toast('Perubahan gagal. Coba lagi.')}finally{if(button){button.dataset.busy='false';button.removeAttribute('aria-disabled')}}};
+R.satker=async(version)=>{const s=await api('/ref/satker');if(version!==routeVersion)return;$('#m').innerHTML=`<div class=bar><h2>Identitas Satker</h2></div><form class=card id=f><div class=g>${Object.keys(s).map(k=>inp(k,k.replace(/_/g,' '),k==='tanggal_dipa'?'date':'text',s[k])).join('')}</div><button type=submit>Simpan</button></form>`;bindSubmit($('#f'),async e=>{await api('/ref/satker',{method:'PUT',body:fd(e.target)});toast('Tersimpan',1)})};
+R.audit=async(version)=>{const r=await api('/audit');if(version!==routeVersion)return;$('#m').innerHTML=`<div class=bar><h2>Audit Trail</h2></div><div class=card>${table([['waktu','Waktu WIB',row=>formatWib(row.waktu)],['pengguna','User'],['aksi','Aksi'],['entitas','Entitas'],['eid','ID'],['detail','Detail']],r)}</div>`};
+draw().catch(error=>{if(!error?.uiNotified)toast('Aplikasi gagal dimuat. Muat ulang halaman.')});
+</script></body></html>
